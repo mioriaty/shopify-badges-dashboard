@@ -1,1 +1,1 @@
-export const todolistSelector = (state: AppState) => state.homePage.todolist;
+export const initializationSelector = (state: AppState) => state.initialization;

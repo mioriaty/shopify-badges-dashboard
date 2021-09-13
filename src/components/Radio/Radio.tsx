@@ -131,15 +131,15 @@ const Radio: FC<RadioProps> & RadioStatic = ({
         </Text>
       ) : (
         <Text
-          color={checkedState ? textActiveColor : 'gray9'}
+          color={checkedState ? textActiveColor : 'gray7'}
           tagName="label"
           borderStyle="solid"
           borderColor="inherit"
           css={[
             css.disabled(disabled),
-            css.radioButtonCheckBackground(checkedState, disabled, activeColor),
             css.block(block),
             css.radioButtonContainer(size),
+            css.radioButtonCheckBackground(checkedState, disabled, activeColor),
           ]}
         >
           <Text tagName="span" css={css.radioButtonWrapper}>

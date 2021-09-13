@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
 import Routes from 'routes';
 import styleBase from 'styles/base';
 import { ThemeOverrides, ThemeProvider, useStyleSheet, View } from 'wiloke-react-core';
@@ -7,14 +6,14 @@ import * as css from './styles';
 
 export const themeOverrides: ThemeOverrides = {
   fonts: {
-    primary: 'Roboto, sans-serif',
-    secondary: 'Poppins, sans-serif',
+    primary: 'Poppins, sans-serif',
+    secondary: 'Roboto, sans-serif',
     tertiary: 'Merriweather, serif',
     quaternary: 'Vibes, serif',
   },
   colors: {
-    primary: '#2AB885',
-    secondary: '#5E76F1',
+    primary: '#26256C',
+    secondary: '#2AB885',
     tertiary: '#F57070',
     quaternary: '#FBC473',
     light: '#FFFFFF',
@@ -72,9 +71,8 @@ export const CSSGlobal: FC = ({ children }) => {
 };
 
 const AppContent: FC = () => {
-  const direction = useSelector((state: AppState) => state.direction);
   return (
-    <ThemeProvider themeOverrides={{ ...themeOverrides, direction }}>
+    <ThemeProvider themeOverrides={{ ...themeOverrides }}>
       <CSSGlobal>
         <Routes />
       </CSSGlobal>

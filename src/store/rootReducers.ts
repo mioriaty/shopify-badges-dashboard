@@ -1,9 +1,7 @@
-import { reducersHeader } from 'containers/Header';
-import { reducersHomePage } from 'containers/HomePage';
+import { reducerInitialization } from 'containers/InitializationPage';
 
 const reducers = {
-  homePage: reducersHomePage,
-  ...reducersHeader,
+  initialization: reducerInitialization,
 };
 
 export default reducers;

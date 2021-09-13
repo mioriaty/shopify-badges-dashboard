@@ -50,7 +50,7 @@ const RadioGroup: FC<RadioGroupProps> = ({
   value,
   children,
   block = false,
-  borderColor = 'gray4',
+  borderColor = 'gray3',
   defaultValue,
   onChange,
   onChangeValue,

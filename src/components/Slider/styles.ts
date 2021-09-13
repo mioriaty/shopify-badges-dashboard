@@ -83,7 +83,7 @@ export const container = (colors: Theme['colors']) => css`
     vertical-align: middle;
     text-align: center;
     cursor: pointer;
-    color: ${colors.gray5};
+    color: ${colors.gray3};
   }
 
   .rc-slider-mark-text-active {
@@ -122,13 +122,13 @@ export const container = (colors: Theme['colors']) => css`
     background-color: ${colors.gray2};
 
     .rc-slider-track {
-      background-color: ${colors.gray5};
+      background-color: ${colors.gray3};
     }
   }
 
   .rc-slider-disabled .rc-slider-handle,
   .rc-slider-disabled .rc-slider-dot {
-    border-color: ${colors.gray5};
+    border-color: ${colors.gray3};
     box-shadow: none;
     background-color: ${colors.light};
     cursor: not-allowed;
@@ -203,14 +203,14 @@ export const container = (colors: Theme['colors']) => css`
     animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
 
     &.rc-slider-tooltip-zoom-down-leave-active {
-      animation-name: rcSliderTooltipZoomDownOut;
+      /* animation-name: rcSliderTooltipZoomDownOut; */
       animation-play-state: running;
     }
   }
 
   .rc-slider-tooltip-zoom-down-enter.rc-slider-tooltip-zoom-down-enter-active,
   .rc-slider-tooltip-zoom-down-appear.rc-slider-tooltip-zoom-down-appear-active {
-    animation-name: rcSliderTooltipZoomDownIn;
+    /* animation-name: rcSliderTooltipZoomDownIn; */
     animation-play-state: running;
   }
 
@@ -266,29 +266,6 @@ export const container = (colors: Theme['colors']) => css`
     border-color: transparent;
     border-style: solid;
   }
-
-  @keyframes rcSliderTooltipZoomDownIn {
-    0% {
-      opacity: 0;
-      transform-origin: 50% 100%;
-      transform: scale(0, 0);
-    }
-
-    100% {
-      transform-origin: 50% 100%;
-      transform: scale(1, 1);
-      opacity: 0;
-      transform-origin: 50% 100%;
-      transform: scale(0, 0);
-    }
-  }
-
-  @keyframes rcSliderTooltipZoomDownOut {
-    0% {
-      transform-origin: 50% 100%;
-      transform: scale(1, 1);
-    }
-  }
 `;
 
 export const loadingContainer = ({ colors }: Theme) => css`
@@ -296,7 +273,7 @@ export const loadingContainer = ({ colors }: Theme) => css`
   height: 3px;
   position: relative;
   border-radius: 4px;
-  background-color: ${colors.gray5};
+  background-color: ${colors.gray3};
 `;
 
 export const loadingInner = ({ colors }: Theme) => css`

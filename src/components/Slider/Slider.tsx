@@ -9,6 +9,8 @@ import * as css from './styles';
 const SliderWithTooltip = createSliderWithTooltip(RSlider);
 
 export interface SliderProps extends GenericSliderProps {
+  /** Giá trị default đầu vào của thanh trượt */
+  defaultValue?: number;
   /** Giá trị đầu vào của thanh trượt */
   value?: number;
   /** Background color của nút điều khiển */
@@ -41,10 +43,11 @@ const Slider: FC<SliderProps> & {
   Loading: typeof SliderLoading;
 } = ({
   value,
+  defaultValue,
   trackColor = 'primary',
-  handleBorderColor = 'gray5',
+  handleBorderColor = 'gray4',
   handleColor = 'light',
-  railColor = 'gray5',
+  railColor = 'gray3',
   min = 0,
   max = 100,
   disabled = false,
@@ -64,6 +67,7 @@ const Slider: FC<SliderProps> & {
   const { styles } = useStyleSheet(colors);
   const generalProps = {
     value,
+    defaultValue,
     min,
     max,
     disabled,

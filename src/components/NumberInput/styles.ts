@@ -3,9 +3,9 @@ import { css, Theme } from 'wiloke-react-core';
 export type Size = 'small' | 'medium' | 'large';
 
 const inputSizeMapping: Record<Size, number> = {
-  small: 28,
-  medium: 37,
-  large: 46,
+  small: 32,
+  medium: 46,
+  large: 52,
 };
 
 export const container = (size: Size, block: boolean, disabled: boolean) => css`
@@ -47,6 +47,7 @@ export const actions = css`
   top: 0;
   right: 0;
   height: 100%;
+  user-select: none;
 `;
 
 export const actionsContainer = css`
@@ -63,13 +64,13 @@ export const actionIncre = ({ colors }: Theme) => css`
   align-items: center;
   line-height: 1;
   flex: 0 0 50%;
-  border-left: 1px solid ${colors.gray5};
-  border-bottom: 1px solid ${colors.gray5};
+  border-left: 1px solid ${colors.gray3};
+  border-bottom: 1px solid ${colors.gray3};
 `;
 
 export const icon = (size: Size) => css`
-  padding: ${size === 'small' ? 0 : size === 'medium' ? 3 : size === 'large' ? 5 : 0}px;
-  font-size: 14px;
+  padding: ${size === 'small' ? 2 : size === 'medium' ? 4 : size === 'large' ? 6 : 0}px;
+  font-size: 12px;
 `;
 
 export const actionDecre = ({ colors }: Theme) => css`
@@ -78,12 +79,12 @@ export const actionDecre = ({ colors }: Theme) => css`
   align-items: center;
   line-height: 1;
   flex: 0 0 50%;
-  border-left: 1px solid ${colors.gray5};
+  border-left: 1px solid ${colors.gray3};
 `;
 
 export const loadingContainer = ({ colors }: Theme) => css`
   width: 60px;
   height: 28px;
-  background-color: ${colors.gray5};
+  background-color: ${colors.gray3};
   border-radius: 5px;
 `;

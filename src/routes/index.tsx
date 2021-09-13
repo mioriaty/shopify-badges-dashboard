@@ -1,34 +1,30 @@
-import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { HomePage } from 'containers/HomePage';
-import { AboutPage } from 'containers/AboutPage';
+import { InitializationPage } from 'containers/InitializationPage';
 import { NotFoundPage } from 'containers/NotFoundPage';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { MemoryRouter, Route, Switch } from 'react-router-dom';
+import { initializationSelector } from 'store/selectors';
 import { Page } from './types';
 
-export const pages: Page[] = [
-  {
-    path: '/',
-    exact: true,
-    component: HomePage,
-  },
-  {
-    path: '/about',
-    exact: true,
-    component: AboutPage,
-  },
-];
+export const pages: Page[] = [];
 
 const Routes = () => {
-  return (
-    <BrowserRouter>
+  const { statusInitialization } = useSelector(initializationSelector);
+
+  const _renderRoute = () => {
+    if (statusInitialization !== 'success') return <InitializationPage />;
+
+    return (
       <Switch>
         {pages.map(({ component, path, exact }) => {
           return <Route key={path} component={component} exact={exact} path={path} />;
         })}
         <Route component={NotFoundPage} />
       </Switch>
-    </BrowserRouter>
-  );
+    );
+  };
+
+  return <MemoryRouter>{_renderRoute()}</MemoryRouter>;
 };
 
 export default Routes;

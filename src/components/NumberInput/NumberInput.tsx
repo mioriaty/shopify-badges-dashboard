@@ -1,4 +1,4 @@
-import React, { FC, InputHTMLAttributes, useEffect } from 'react';
+import React, { FC, InputHTMLAttributes, useEffect, useRef } from 'react';
 import { Size, useStyleSheet, View, ViewProps } from 'wiloke-react-core';
 import { classNames } from 'wiloke-react-core/utils';
 import Action from './Actions';
@@ -52,6 +52,7 @@ const NumberInput: FC<NumberInputProps> & {
   ...rest
 }) => {
   const { styles } = useStyleSheet();
+  const prevCountRef = useRef<number | null>(null);
 
   const { count, decrement, increment, setCount } = useCount({
     min: min,
@@ -61,7 +62,10 @@ const NumberInput: FC<NumberInputProps> & {
   });
 
   useEffect(() => {
-    onValueChange?.(count);
+    if (prevCountRef.current !== count) {
+      onValueChange?.(count);
+      prevCountRef.current = count;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count]);
 
@@ -77,14 +81,15 @@ const NumberInput: FC<NumberInputProps> & {
     <View
       {...rest}
       className={classNames(className, 'NumberInput-container')}
-      css={css.container(sizeInput, block, disabled)}
+      css={[rest.css, css.container(sizeInput, block, disabled)]}
       color={color}
       backgroundColor={backgroundColor}
       borderColor={borderColor}
       borderWidth={borderWidth}
       borderStyle={borderStyle}
     >
-      <input
+      <View
+        tagName="input"
         className={styles(css.input(sizeInput))}
         type={type}
         min={min}
@@ -93,6 +98,7 @@ const NumberInput: FC<NumberInputProps> & {
         value={count}
         disabled={disabled}
         onChange={_handleChange}
+        color="gray7"
       />
 
       <View css={css.actions} backgroundColor="transparent">

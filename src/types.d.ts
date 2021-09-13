@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Reducers } from './store/configureStore';
 
 declare global {

@@ -24,13 +24,13 @@ const dotSizeMapping: Record<Size, number> = {
 
 const radioButtonSizeMapping: Record<Size, RadioButtonSizeInfo> = {
   large: {
-    height: 46,
+    height: 52,
     'font-size': 14,
-    'line-height': 44,
-    padding: '0 42px',
+    'line-height': 48,
+    padding: '0 15px',
   },
 
-  medium: { height: 38, 'font-size': 12, 'line-height': 36, padding: '0 15px' },
+  medium: { height: 38, 'font-size': 14, 'line-height': 36, padding: '0 15px' },
   small: { height: 30, padding: '0 7px', 'line-height': 28, 'font-size': 12 },
   'extra-small': {
     height: 22,
@@ -67,6 +67,7 @@ export const radioNative = (variant: RadioVariant) => {
       bottom: 0;
       z-index: 1;
       opacity: 0;
+      visibility: hidden;
     `;
   }
   return css`
@@ -74,6 +75,7 @@ export const radioNative = (variant: RadioVariant) => {
     width: 0;
     height: 0;
     opacity: 0;
+    visibility: hidden;
   `;
 };
 
@@ -103,7 +105,7 @@ export const dotCheckBackground = (checkedState: boolean, disabled: boolean, act
   } else if (checkedState && disabled) {
     return css`
       debug: Radio-dotCheckBackground;
-      background-color: ${colors.gray5};
+      background-color: ${colors.gray3};
     `;
   }
   return css`
@@ -120,18 +122,19 @@ export const radioButtonContainer = (size: Size) => css`
   cursor: pointer;
   height: 38px;
   padding: 0 15px;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 36px;
-  border-width: 1px 1px 1px 0;
+  border-width: 2px 1px 2px 0;
   border-color: inherit;
 
   &:first-child {
     border-radius: 5px 0 0 5px;
-    border-left: 1px solid;
+    border-left: 2px solid;
     border-color: inherit;
   }
 
   &:last-child {
+    border-right-width: 2px;
     border-radius: 0 5px 5px 0;
   }
 
@@ -147,7 +150,7 @@ export const disabled = (disabled: boolean) => ({ colors }: Theme) => {
   }
   return css`
     debug: RadioButton-disabled;
-    background-color: ${colors.gray4};
+    background-color: ${colors.gray3};
     color: ${colors.gray5} !important;
     cursor: not-allowed;
   `;
@@ -162,7 +165,7 @@ export const radioButtonCheckBackground = (checkedState: boolean, disabled: bool
   } else if (checkedState && disabled) {
     return css`
       debug: RadioButton-background;
-      background-color: ${colors.gray4};
+      background-color: ${colors.gray3};
       color: ${colors.gray5} !important;
       cursor: not-allowed;
     `;

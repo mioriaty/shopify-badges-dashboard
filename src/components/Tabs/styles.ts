@@ -6,23 +6,11 @@ export const container = ({ colors }: Theme) => css`
 
   .rc-tabs {
     border: none !important;
-    overflow: initial;
   }
 
   .rc-tabs-nav-more {
     cursor: pointer !important;
     outline: none !important;
-  }
-
-  .rc-tabs-nav-list {
-    background-color: ${colors.light};
-    border-radius: 23px;
-    overflow: hidden;
-    padding: 4px;
-  }
-
-  .rc-tabs-content-holder {
-    display: block;
   }
 
   .rc-tabs-tab {
@@ -34,18 +22,11 @@ export const container = ({ colors }: Theme) => css`
   }
 
   .rc-tabs-nav {
-    padding: 20px 0 12px;
+    margin-bottom: 8px;
     align-items: center;
-    width: 100%;
-    background-color: transparent;
-
-    /* border-radius: 10px 0 0 10px; */
   }
 
   .rc-tabs-nav-wrap {
-    padding: 0 8px;
-    width: 100%;
-
     &::before,
     &::after {
       content: '';
@@ -70,20 +51,10 @@ export const container = ({ colors }: Theme) => css`
     outline: none !important;
   }
 
-  .rc-tabs-tab {
-    padding: 10px 20px;
-    background-color: ${colors.light};
-    transition: 0.03s ease-in-out;
-    position: relative;
-    border-radius: 6px;
-  }
-
   .rc-tabs-tab .rc-tabs-tab-btn {
-    font-weight: 500;
+    font-weight: 400;
     font-size: 14px;
-    line-height: 20px;
     border: none;
-    color: ${colors.gray8};
 
     &:active,
     &:hover,
@@ -93,18 +64,12 @@ export const container = ({ colors }: Theme) => css`
     }
   }
 
-  .rc-tabs-tab-active {
-    background-color: ${colors.gray8} !important;
-    border-radius: 6px;
-    font-weight: 500;
-  }
-
-  .rc-tabs-tab-active .rc-tabs-tab-btn {
-    color: ${colors.light} !important;
+  .rc-tabs-tab.rc-tabs-tab-active {
+    color: ${colors.behance} !important;
   }
 
   .rc-tabs-ink-bar {
-    display: none;
+    background: ${colors.behance} !important;
   }
 
   .rc-tabs-tab-disabled {
@@ -157,5 +122,5 @@ export const container = ({ colors }: Theme) => css`
 `;
 
 export const tabPaneChildren = css`
-  display: none;
+  padding: 8px;
 `;
