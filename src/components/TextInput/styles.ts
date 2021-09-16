@@ -5,10 +5,11 @@ export type Size = 'small' | 'medium' | 'large';
 const inputSizeMapping: Record<Size, number> = {
   small: 28,
   medium: 37,
-  large: 46,
+  large: 52,
 };
 
 export const container = (size: Size, block: boolean, disabled: boolean) => css`
+  debug: TextInput__container;
   margin: 0;
   font-size: 14px;
   position: relative;
@@ -20,6 +21,7 @@ export const container = (size: Size, block: boolean, disabled: boolean) => css`
 `;
 
 export const input = (size: Size) => css`
+  debug: TextInput__input;
   display: block;
   background-color: transparent;
   border: none;
@@ -34,14 +36,16 @@ export const input = (size: Size) => css`
 `;
 
 export const loadingContainer = ({ colors }: Theme) => css`
+  debug: TextInput__loadingContainer;
   width: 200px;
-  height: 46px;
+  height: 52px;
   border-radius: 6px;
   background-color: ${colors.gray5};
   position: relative;
 `;
 
 export const loadingInner = ({ colors }: Theme) => css`
+  debug: TextInput__loadingInner;
   position: absolute;
   width: 40%;
   background-color: ${colors.gray4};

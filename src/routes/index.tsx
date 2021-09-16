@@ -1,18 +1,21 @@
-import { InitializationPage } from 'containers/InitializationPage';
+import { EditorPage } from 'containers/EditorPage/EditorPage';
 import { NotFoundPage } from 'containers/NotFoundPage';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { MemoryRouter, Route, Switch } from 'react-router-dom';
-import { initializationSelector } from 'store/selectors';
 import { Page } from './types';
 
-export const pages: Page[] = [];
+export const pages: Page[] = [
+  {
+    path: '/',
+    component: EditorPage,
+  },
+];
 
 const Routes = () => {
-  const { statusInitialization } = useSelector(initializationSelector);
+  // const { statusInitialization } = useSelector(initializationSelector);
 
   const _renderRoute = () => {
-    if (statusInitialization !== 'success') return <InitializationPage />;
+    // if (statusInitialization !== 'success') return <InitializationPage />;
 
     return (
       <Switch>

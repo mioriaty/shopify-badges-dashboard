@@ -28,5 +28,7 @@
     "build",
     "**/*.js"
   ],
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

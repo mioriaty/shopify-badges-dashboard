@@ -71,7 +71,7 @@
     "reselect": "^4.0.0",
     "uuid": "^8.3.2",
     "web-vitals": "^0.2.4",
-    "wiloke-react-core": "0.8.3"
+    "wiloke-react-core": "^0.8.13"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^5.3.19",
