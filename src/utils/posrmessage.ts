@@ -3,7 +3,7 @@ import { ResponseError as ResponseBadgesError, ResponseSuccess as ResponseBadges
 import { Data, ResponseError, ResponseSuccess } from 'containers/HomePage/ProductAPI';
 import { createPostMessage } from 'wiloke-react-core/utils';
 
-export const FRONTEND_URL = process.env.FRONT_END_URL || 'http://localhost:3001/';
+export const FRONTEND_URL = process.env.FRONT_END_URL || 'https://magic-badges-service.netlify.app';
 
 export interface ParentOnMessage {
   '@InitializationPage/getTemplate': undefined;
