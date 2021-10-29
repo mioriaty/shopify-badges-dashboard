@@ -1,9 +1,10 @@
 export interface Params {
   limit: number;
-  cursor: string;
+  cursor?: string;
   s: string;
   status: 'active' | 'deactive' | 'any';
   pluck: string;
+  page: number;
 }
 
 export interface ResponseError {
@@ -15,9 +16,25 @@ export interface ResponseSuccess {
   message: string;
   status: string;
   data: {
-    items: Data[];
+    items: WordpressProduct[];
     hasNextPage: boolean;
+    maxPages: number;
   };
+}
+
+export interface WordpressProduct {
+  id: string;
+  title: string;
+  image: FeaturedImage;
+  link: string;
+  manual: {
+    id: string;
+    badge_id: string;
+    urlImage: string;
+    config: unknown;
+  };
+  price: string[];
+  isSelected: boolean;
 }
 
 export interface Data {

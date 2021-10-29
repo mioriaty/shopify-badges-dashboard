@@ -1,12 +1,12 @@
-import { ResponseError, ResponseSuccess } from 'containers/HomePage/ProductAPI';
-import { ResponseSuccess as ResponseBadgesSuccess, ResponseError as ResponseBadgesError } from 'containers/HomePage/BadgeAPI';
 import { ResponseSuccess as ResponseAutomaticSuccess } from 'containers/HomePage/AutomaticAPI';
-
+import { ResponseError as ResponseBadgesError, ResponseSuccess as ResponseBadgesSuccess } from 'containers/HomePage/BadgeAPI';
+import { Data, ResponseError, ResponseSuccess } from 'containers/HomePage/ProductAPI';
 import { createPostMessage } from 'wiloke-react-core/utils';
 
-export const FRONTEND_URL = 'http://localhost:3001/';
+export const FRONTEND_URL = process.env.FRONT_END_URL || 'http://localhost:3001/';
 
 export interface ParentOnMessage {
+  '@InitializationPage/getTemplate': undefined;
   '@SendReview': undefined;
   '@SendPublish': undefined;
 
@@ -75,6 +75,9 @@ export interface ParentOnMessage {
 }
 
 export interface ParentEmitMessage {
+  '@InitializationPage/sendTemplate': {
+    template: 'wordpress' | 'shopify';
+  };
   '@InitializationPage/success': {
     shopDomain?: string;
     themeId?: number;
@@ -82,8 +85,9 @@ export interface ParentEmitMessage {
   // full products
   '@ProductPage/fullProductSuccess': {
     fullProducts: {
-      items: ResponseSuccess['data']['items'];
+      items: Data[];
       hasNextPage: ResponseSuccess['data']['hasNextPage'];
+      maxPages: number;
     };
   };
   '@ProductPage/fullProductFailure': {
@@ -91,8 +95,9 @@ export interface ParentEmitMessage {
   };
   '@ProductPage/fullProductLoadMoreSuccess': {
     fullProducts: {
-      items: ResponseSuccess['data']['items'];
+      items: Data[];
       hasNextPage: ResponseSuccess['data']['hasNextPage'];
+      maxPages: number;
     };
   };
   '@ProductPage/fullProductLoadMoreFailure': {
@@ -101,8 +106,9 @@ export interface ParentEmitMessage {
   // manual products
   '@ProductPage/manualProductSuccess': {
     fullProducts: {
-      items: ResponseSuccess['data']['items'];
+      items: Data[];
       hasNextPage: ResponseSuccess['data']['hasNextPage'];
+      maxPages: number;
     };
   };
   '@ProductPage/manualProductFailure': {
@@ -110,8 +116,9 @@ export interface ParentEmitMessage {
   };
   '@ProductPage/manualProductLoadMoreSuccess': {
     fullProducts: {
-      items: ResponseSuccess['data']['items'];
+      items: Data[];
       hasNextPage: ResponseSuccess['data']['hasNextPage'];
+      maxPages: number;
     };
   };
   '@ProductPage/manualProductLoadMoreFailure': {

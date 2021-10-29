@@ -8,6 +8,8 @@ interface StateData {
   products: ResponseSuccess['data']['items'];
   lastCursor: string;
   hasNextPage: boolean;
+  currentPage: number;
+  maxPages: number;
 }
 
 interface State {
@@ -23,6 +25,8 @@ const defaultData: StateData = {
   products: [],
   lastCursor: '',
   hasNextPage: false,
+  currentPage: 1,
+  maxPages: 1,
 };
 
 const defaultState: State = {
@@ -52,7 +56,7 @@ export const reducerManualProducts = createReducer<State, Actions>(defaultState,
   }),
   handleAction('@ManualProducts/getManualProductsSuccess', ({ state, action }) => {
     const { activeKey, data } = state;
-    const { products, hasNextPage, lastCursor } = action.payload;
+    const { products, hasNextPage, lastCursor, maxPages } = action.payload;
     return {
       ...state,
       data: {
@@ -63,6 +67,7 @@ export const reducerManualProducts = createReducer<State, Actions>(defaultState,
           products,
           hasNextPage,
           lastCursor,
+          maxPages,
         },
       },
     };
@@ -108,7 +113,7 @@ export const reducerManualProducts = createReducer<State, Actions>(defaultState,
   }),
   handleAction('@ManualProducts/loadmoreManualProductsSuccess', ({ state, action }) => {
     const { activeKey, data } = state;
-    const { products, hasNextPage, lastCursor } = action.payload;
+    const { products, hasNextPage, lastCursor, maxPages } = action.payload;
     return {
       ...state,
       data: {
@@ -119,6 +124,8 @@ export const reducerManualProducts = createReducer<State, Actions>(defaultState,
           products: (data[activeKey] ?? defaultData).products.concat(products),
           lastCursor,
           hasNextPage,
+          currentPage: (data[activeKey] ?? defaultData).currentPage + 1,
+          maxPages,
         },
       },
     };

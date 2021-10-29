@@ -9,6 +9,7 @@ import * as styles from './styles';
 export const InitializationPage = () => {
   const { token } = useSelector(initializationSelector);
   const pmWpRequest = useRef<(() => void) | undefined>();
+
   const getWordpressInfo = useGetWordpressInfo();
 
   useEffect(() => {

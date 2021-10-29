@@ -6,40 +6,39 @@ import { postmessage } from 'utils/posrmessage';
 import { getActionType } from 'wiloke-react-core/utils';
 import { loadmoreFullProducts } from '../../actions/actionFullProducts';
 import { Params, ResponseError, ResponseSuccess } from '../../ProductAPI';
+import { transformNewProduct } from './utils';
 
 let task: Task | undefined;
 
 function* handleLoadmoreFullProducts(_: ReturnType<typeof loadmoreFullProducts.request>) {
   try {
     const { activeKey, data }: AppState['fullProducts'] = yield select((state: AppState) => state.fullProducts);
-    const { hasNextPage, lastCursor } = data[activeKey] as Exclude<AppState['fullProducts']['data'][string], undefined>;
-    if (!hasNextPage || !lastCursor) {
-      postmessage.emit('@ProductPage/fullProductLoadMoreSuccess', { fullProducts: { items: [], hasNextPage: false } });
-      yield put(loadmoreFullProducts.success({ products: [], hasNextPage: false, lastCursor }));
-    } else {
-      const res: AxiosResponse<ResponseSuccess | ResponseError> = yield retry(3, 2000, fetchAPI.request, {
-        url: 'full-products',
-        params: {
-          s: activeKey ? activeKey : undefined,
-          cursor: lastCursor,
-        } as Params,
-      });
-      const _dataError = res.data as ResponseError;
-      const _dataSuccess = res.data as ResponseSuccess;
-      if (_dataError.code) throw new Error(_dataError.message);
-      postmessage.emit('@ProductPage/fullProductLoadMoreSuccess', {
-        fullProducts: { items: _dataSuccess.data.items, hasNextPage: _dataSuccess.data.hasNextPage },
-      });
+    const { currentPage } = data[activeKey] as Exclude<AppState['fullProducts']['data'][string], undefined>;
+    const res: AxiosResponse<ResponseSuccess | ResponseError> = yield retry(3, 2000, fetchAPI.request, {
+      url: 'full-products',
+      params: {
+        s: activeKey ? activeKey : undefined,
+        page: currentPage + 1,
+      } as Params,
+    });
+    const _dataError = res.data as ResponseError;
+    const _dataSuccess = res.data as ResponseSuccess;
+    if (_dataError.code) throw new Error(_dataError.message);
 
-      const _cursor = _dataSuccess.data.items[_dataSuccess.data.items.length - 1].cursor;
-      yield put(
-        loadmoreFullProducts.success({
-          products: _dataSuccess.data.items,
-          hasNextPage: _dataSuccess.data.hasNextPage,
-          lastCursor: _cursor,
-        }),
-      );
-    }
+    const transformedData = transformNewProduct(_dataSuccess.data.items);
+
+    postmessage.emit('@ProductPage/fullProductLoadMoreSuccess', {
+      fullProducts: { items: transformedData, hasNextPage: _dataSuccess.data.hasNextPage, maxPages: _dataSuccess.data.maxPages },
+    });
+
+    yield put(
+      loadmoreFullProducts.success({
+        products: _dataSuccess.data.items,
+        hasNextPage: _dataSuccess.data.hasNextPage,
+        lastCursor: '',
+        maxPages: _dataSuccess.data.maxPages,
+      }),
+    );
   } catch (err) {
     yield put(loadmoreFullProducts.failure(undefined));
   }

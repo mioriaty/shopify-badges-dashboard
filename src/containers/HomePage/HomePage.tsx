@@ -1,9 +1,7 @@
-import { useCrispChat } from 'hooks/useCrispChat';
 import { useTidioChat } from 'hooks/useTidioChat';
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import fetchAPI from 'utils/functions/fetchAPI';
-import { isBrowser } from 'utils/isBrowser';
 import { postmessage } from 'utils/posrmessage';
 import { View } from 'wiloke-react-core';
 import { IframePage } from '../IframePage/IframePage';
@@ -59,19 +57,29 @@ export const HomePage = () => {
   const pmOpenTidio = useRef<(() => void) | undefined>();
   const pmSendReview = useRef<(() => void) | undefined>();
   const pmSendPublish = useRef<(() => void) | undefined>();
-
-  const { initTidioChat } = useTidioChat();
-  const { initCrispChat } = useCrispChat();
+  const { tidioId } = useSelector(initializationSelector);
+  const { initTidioChat } = useTidioChat(tidioId);
+  // const { initCrispChat } = useCrispChat();
 
   const { shopDomain, themeId } = useSelector(initializationSelector);
+  const pmTemplate = useRef<(() => void) | undefined>();
 
   useEffect(() => {
-    if (isBrowser) {
-      initTidioChat();
-      initCrispChat(shopDomain as string);
-    }
+    pmTemplate.current = postmessage.on('@InitializationPage/getTemplate', () => {
+      postmessage.emit('@InitializationPage/sendTemplate', { template: 'wordpress' });
+    });
+    return () => {
+      pmTemplate.current?.();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (tidioId) {
+      initTidioChat();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tidioId]);
 
   useEffect(() => {
     pmSendReview.current = postmessage.on('@SendReview', async () => {

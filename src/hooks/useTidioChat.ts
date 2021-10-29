@@ -4,19 +4,17 @@ import storage from 'utils/storage';
 
 const useGlobalEmail = createGlobalState<string | undefined>();
 
-const PUBLIC_KEY = process.env.NEXT_PUBLIC_TIDIO_KEY || '';
-
-export const useTidioChat = () => {
+export const useTidioChat = (tidioId?: string) => {
   const [email, setEmail] = useGlobalEmail();
 
   const handleInitTidioChat = () => {
     const tidioScript = document.createElement('script');
-    tidioScript.src = `//code.tidio.co/${PUBLIC_KEY}.js`;
+    tidioScript.src = `//code.tidio.co/${tidioId}.js`;
     document.body.appendChild(tidioScript);
   };
 
   const _handleReady = () => {
-    const tidioState = JSON.parse(storage.getItem(`tidio_state_${PUBLIC_KEY}`) || '{}');
+    const tidioState = JSON.parse(storage.getItem(`tidio_state_${tidioId}`) || '{}');
     const email = tidioState.visitor?.email ?? '';
     window.tidioChatApi.setColorPalette('#2AB885');
     setEmail(email);
@@ -44,9 +42,9 @@ export const useTidioChat = () => {
   };
 
   const handleReset = () => {
-    storage.removeItem(`tidio_state_${PUBLIC_KEY}`);
-    storage.removeItem(`tidio_state_${PUBLIC_KEY}_lastActivity`);
-    storage.removeItem(`tidio_state_${PUBLIC_KEY}_lastMessageFromVisitorTimestamp`);
+    storage.removeItem(`tidio_state_${tidioId}`);
+    storage.removeItem(`tidio_state_${tidioId}_lastActivity`);
+    storage.removeItem(`tidio_state_${tidioId}_lastMessageFromVisitorTimestamp`);
   };
 
   return {
