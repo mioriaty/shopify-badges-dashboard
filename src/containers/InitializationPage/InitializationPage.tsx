@@ -26,6 +26,8 @@ export const InitializationPage = () => {
         youtubePreviewUrl,
       } = payload;
 
+      console.log({ clientSite, email, endpointVerification, productName, purchaseCode, purchaseCodeLink, tidioId, token, url, youtubePreviewUrl });
+
       getWordpressInfo({
         clientSite,
         email,
