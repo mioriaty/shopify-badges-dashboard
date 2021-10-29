@@ -35,6 +35,7 @@ export interface WordpressProduct {
   };
   price: string[];
   isSelected: boolean;
+  slug: string;
 }
 
 export interface Data {

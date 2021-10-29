@@ -11,7 +11,7 @@ export const transformNewProduct = (products: WordpressProduct[]) => {
         height: product.image.height,
         width: product.image.width,
       },
-      handle: product.link,
+      handle: product.slug,
       isSelected: product.isSelected,
       manual: product.manual,
       priceRangeV2: {
