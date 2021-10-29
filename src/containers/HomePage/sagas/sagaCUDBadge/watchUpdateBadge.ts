@@ -17,6 +17,7 @@ function* handleUpdateBadge({ payload }: ReturnType<typeof updateBadge.request>)
         config,
         slugs: slug.join(','),
         ids: id.join(','),
+        productIDs: id.join(','),
       },
     });
     const _dataError = res.data as ResponseError;

@@ -1,8 +1,17 @@
 import { all, call, spawn, delay } from 'redux-saga/effects';
 import { sagaAutomatics, sagaCUDBadge, sagasBadges, sagasFullProducts, sagasManualProducts } from 'containers/HomePage';
 import { sagasInitializationPage } from 'containers/InitializationPage';
+import { sagasLoginPage } from 'containers/LoginPage';
 
-const sagas = [...sagasInitializationPage, ...sagasFullProducts, ...sagasManualProducts, ...sagasBadges, ...sagaCUDBadge, ...sagaAutomatics];
+const sagas = [
+  ...sagasInitializationPage,
+  ...sagasFullProducts,
+  ...sagasManualProducts,
+  ...sagasBadges,
+  ...sagaCUDBadge,
+  ...sagaAutomatics,
+  ...sagasLoginPage,
+];
 
 // https://github.com/redux-saga/redux-saga/issues/760#issuecomment-273737022
 const makeRestartable = (saga: any) => {

@@ -238,8 +238,8 @@ export const HomePage = () => {
 
   useEffect(() => {
     pmCreateBadges.current = postmessage.on('@CUDBadge/createBadgesRequest', payload => {
-      const { badge_id, config, id, slug } = payload;
-      createBadge.request({ id, badge_id, config, slug });
+      const { badge_id, config, id, slug, productIds } = payload;
+      createBadge.request({ id, badge_id, config, slug, productIds });
     });
     return () => {
       pmCreateBadges.current?.();

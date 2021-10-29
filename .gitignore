@@ -24,3 +24,6 @@ yarn-error.log*
 build-storybook.log
 yarn.lock
 .eslintcache
+
+# Local Netlify folder
+.netlify

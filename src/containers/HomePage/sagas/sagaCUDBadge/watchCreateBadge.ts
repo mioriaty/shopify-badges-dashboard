@@ -7,7 +7,7 @@ import { createBadge } from '../../actions/actionCUDBadge';
 import { ResponseError, ResponseSuccess } from '../../CreateBadgeAPI';
 
 function* handleCreateBadge({ payload }: ReturnType<typeof createBadge.request>) {
-  const { badge_id, config, slug } = payload;
+  const { badge_id, config, slug, productIds } = payload;
   try {
     const res: AxiosResponse<ResponseSuccess | ResponseError> = yield retry(3, 1000, fetchAPI.request, {
       url: 'manual-products',
@@ -16,6 +16,7 @@ function* handleCreateBadge({ payload }: ReturnType<typeof createBadge.request>)
         badge_id,
         config,
         slugs: slug.join(','),
+        productIDs: productIds.join(','),
       },
     });
     const _dataError = res.data as ResponseError;

@@ -1,10 +1,9 @@
+import { Login } from 'containers/LoginPage';
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
 import { pmAjax } from 'utils/initPostmesssage';
-import { View } from 'wiloke-react-core';
 import { initializationSelector, useGetWordpressInfo } from '.';
-import * as styles from './styles';
 
 export const InitializationPage = () => {
   const { token } = useSelector(initializationSelector);
@@ -27,8 +26,6 @@ export const InitializationPage = () => {
         youtubePreviewUrl,
       } = payload;
 
-      console.log({ clientSite, email, endpointVerification, productName, purchaseCode, purchaseCodeLink, tidioId, token, url, youtubePreviewUrl });
-
       getWordpressInfo({
         clientSite,
         email,
@@ -50,5 +47,5 @@ export const InitializationPage = () => {
 
   if (token) return <Redirect to="/" />;
 
-  return <View css={styles.container}>Initialization App</View>;
+  return <Login />;
 };

@@ -39,6 +39,7 @@ export interface ParentOnMessage {
     slug: string[];
     badge_id: string;
     config: any;
+    productIds: string[];
   };
   '@CUDBadge/updateBadgesRequest': {
     id: string[];
@@ -98,6 +99,7 @@ export interface ParentEmitMessage {
       items: Data[];
       hasNextPage: ResponseSuccess['data']['hasNextPage'];
       maxPages: number;
+      currentPage: number;
     };
   };
   '@ProductPage/fullProductLoadMoreFailure': {

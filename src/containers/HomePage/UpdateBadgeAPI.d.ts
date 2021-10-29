@@ -11,14 +11,14 @@ export interface ResponseError {
 }
 
 interface DataResponseSuccess {
-  id: string
-  slug: string
-  date: string
+  id: string;
+  slug: string;
+  date: string;
 }
 
 export interface ResponseSuccess {
   data: {
-    items: DataResponseSuccess[]
+    items: DataResponseSuccess[];
   };
   status: string;
   message: string;

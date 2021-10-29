@@ -26,9 +26,13 @@ function* handleLoadmoreFullProducts(_: ReturnType<typeof loadmoreFullProducts.r
     if (_dataError.code) throw new Error(_dataError.message);
 
     const transformedData = transformNewProduct(_dataSuccess.data.items);
-
     postmessage.emit('@ProductPage/fullProductLoadMoreSuccess', {
-      fullProducts: { items: transformedData, hasNextPage: _dataSuccess.data.hasNextPage, maxPages: _dataSuccess.data.maxPages },
+      fullProducts: {
+        items: transformedData,
+        hasNextPage: _dataSuccess.data.hasNextPage,
+        maxPages: _dataSuccess.data.maxPages,
+        currentPage: currentPage + 1,
+      },
     });
 
     yield put(
@@ -40,6 +44,10 @@ function* handleLoadmoreFullProducts(_: ReturnType<typeof loadmoreFullProducts.r
       }),
     );
   } catch (err) {
+    const _err = err as Error;
+    postmessage.emit('@ProductPage/fullProductLoadMoreFailure', {
+      message: _err.message,
+    });
     yield put(loadmoreFullProducts.failure(undefined));
   }
 }
