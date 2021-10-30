@@ -27,7 +27,12 @@ function* handleLoadmoreManualProducts(_: ReturnType<typeof loadmoreManualProduc
     const transformedData = transformNewProduct(_dataSuccess.data.items);
 
     postmessage.emit('@ProductPage/manualProductLoadMoreSuccess', {
-      fullProducts: { items: transformedData, hasNextPage: _dataSuccess.data.hasNextPage, maxPages: _dataSuccess.data.maxPages },
+      fullProducts: {
+        items: transformedData,
+        hasNextPage: _dataSuccess.data.hasNextPage,
+        maxPages: _dataSuccess.data.maxPages,
+        currentPage: currentPage + 1,
+      },
     });
 
     yield put(

@@ -249,8 +249,8 @@ export const HomePage = () => {
 
   useEffect(() => {
     pmUpdateBadge.current = postmessage.on('@CUDBadge/updateBadgesRequest', payload => {
-      const { badge_id, config, id, slug } = payload;
-      updateBadge.request({ badge_id, config, id: id, slug });
+      const { badge_id, config, id, slug, productIds } = payload;
+      updateBadge.request({ badge_id, config, id: id, slug, productIds });
     });
     return () => {
       pmUpdateBadge.current?.();

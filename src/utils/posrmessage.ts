@@ -123,6 +123,7 @@ export interface ParentEmitMessage {
       items: Data[];
       hasNextPage: ResponseSuccess['data']['hasNextPage'];
       maxPages: number;
+      currentPage: number;
     };
   };
   '@ProductPage/manualProductLoadMoreFailure': {

@@ -3,6 +3,7 @@ export interface Params {
   badge_id: string;
   slug: string[];
   config: string;
+  productIds: string[];
 }
 
 export interface ResponseError {

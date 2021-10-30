@@ -7,7 +7,7 @@ import { updateBadge } from '../../actions/actionCUDBadge';
 import { ResponseError, ResponseSuccess } from '../../UpdateBadgeAPI';
 
 function* handleUpdateBadge({ payload }: ReturnType<typeof updateBadge.request>) {
-  const { id, badge_id, config, slug } = payload;
+  const { id, badge_id, config, slug, productIds } = payload;
   try {
     const res: AxiosResponse<ResponseSuccess | ResponseError> = yield retry(3, 1000, fetchAPI.request, {
       url: `manual-products`,
@@ -17,7 +17,7 @@ function* handleUpdateBadge({ payload }: ReturnType<typeof updateBadge.request>)
         config,
         slugs: slug.join(','),
         ids: id.join(','),
-        productIDs: id.join(','),
+        productIDs: productIds.join(','),
       },
     });
     const _dataError = res.data as ResponseError;
