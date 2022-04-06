@@ -2,17 +2,37 @@ import { ResponseSuccess as ResponseAutomaticSuccess } from 'containers/HomePage
 import { ResponseError as ResponseBadgesError, ResponseSuccess as ResponseBadgesSuccess } from 'containers/HomePage/BadgeAPI';
 import { Data, ResponseError, ResponseSuccess } from 'containers/HomePage/ProductAPI';
 import { createPostMessage } from 'wiloke-react-core/utils';
-
-export const FRONTEND_URL = process.env.FRONT_END_URL || 'https://badges-dashboard.netlify.app/';
-// export const FRONTEND_URL = process.env.FRONT_END_URL || 'http://localhost:3001/';
+import { ResponseSuccess as TagsSuccess } from 'containers/HomePage/TagsAPI';
+// export const FRONTEND_URL = process.env.FRONT_END_URL || 'https://badges-dashboard.netlify.app/';
+export const FRONTEND_URL = process.env.FRONT_END_URL || 'http://localhost:3000/';
+import { DocumentsData } from 'containers/HomePage/DocumentAPI';
+import { RecommendItem } from 'containers/HomePage/FeatureAPI';
 
 export interface ParentOnMessage {
-  '@InitializationPage/getTemplate': undefined;
-  '@SendReview': undefined;
-  '@SendPublish': undefined;
+  '@Badges/trackingBadges/request': undefined;
+  '@Document/getDocuments/request': {
+    s?: string;
+  };
+  '@Navigation/OpenDocument': undefined;
+  '@Navigation/DiemMyCuuThay': undefined;
+  '@Navigation/Feedbacks': undefined;
 
+  '@Automatic/getSubTagsRequest': undefined;
+  '@Automatic/getTagsRequest': {
+    searchKey: string;
+  };
+  '@Automatic/loadMoreTagsRequest': undefined;
+  '@Automatic/sortListPostType': {
+    listPostType: string[];
+  };
+  '@SendReview': undefined;
+  '@SendPublish': {
+    isNew: boolean;
+  };
+  '@InitializationPage/sendYoutubeLink': undefined;
   '@InitializationPage/request': undefined;
   '@Navigation/RequestFeature': undefined;
+  '@UnblockFeature': undefined;
   '@ProductPage/fullProductRequest': {
     searchKey: string;
   };
@@ -27,6 +47,9 @@ export interface ParentOnMessage {
     taxSlugs?: string;
     taxName?: string;
     limit?: number;
+  };
+  '@BadgesPage/getVariantBadgesRequest': {
+    id: string;
   };
   '@BadgesPage/loadMoreBadgesRequest': {
     searchKey: string;
@@ -61,6 +84,14 @@ export interface ParentOnMessage {
     title: string;
     description: string;
     config: string;
+    baseUrl: string;
+    status?: 'active' | 'deactive';
+    interval?: string;
+    discount?: string;
+    tagsSelected?: string;
+    quantity?: string;
+    filter?: string;
+    atLeast?: string;
   };
 
   '@CUDAutomatic/updateAutomaticRequest': {
@@ -69,21 +100,77 @@ export interface ParentOnMessage {
     title: string;
     description: string;
     config: string;
+    baseUrl: string;
+    status?: 'active' | 'deactive';
+    interval?: string;
+    discount?: string;
+    tagsSelected?: string;
+    quantity?: string;
+    filter?: string;
+    atLeast?: string;
   };
 
   '@CUDAutomatic/deleteAutomaticRequest': {
     id: string;
     postType: string;
   };
+
+  '@InitializationPage/getTemplate': undefined;
+  '@FeaturePage/getFeature/request': undefined;
 }
 
 export interface ParentEmitMessage {
+  '@Badges/trackingBadges/success': {
+    maxBadges: number;
+    takenBadge: number;
+    message: string;
+  };
+  '@Badges/trackingBadges/failure': undefined;
+  '@Document/getDocuments/success': {
+    data: DocumentsData[];
+  };
+  '@Document/getDocuments/failure': undefined;
+
+  '@Automatic/getSubTagsSuccess': {
+    items: ResponseAutomaticSuccess['data']['items'];
+    maxPages: ResponseAutomaticSuccess['data']['maxPages'];
+  };
+  '@Automatic/getSubTagsFailure': undefined;
+  '@Automatic/getTagsSuccess': {
+    tags: TagsSuccess['data']['items'];
+    hasNextPage: boolean;
+  };
+  '@Automatic/loadMoreTagsSuccess': {
+    tags: TagsSuccess['data']['items'];
+    hasNextPage: boolean;
+  };
+  '@Automatic/getTagsFailure': undefined;
+  '@Automatic/loadMoreTagsFailure': undefined;
+  '@FeaturePage/getFeature/success': {
+    data: RecommendItem[];
+  };
+  '@FeaturePage/getFeature/failure': undefined;
+  '@GetPublish': {
+    isPublish: boolean;
+  };
   '@InitializationPage/sendTemplate': {
     template: 'wordpress' | 'shopify';
+  };
+  '@InitializationPage/getYoutubeLink': {
+    youtube: string;
+    tutorialsVideo: string;
   };
   '@InitializationPage/success': {
     shopDomain?: string;
     themeId?: number;
+    currencyFormat: string;
+    reviewUrl: string;
+    feedBackMail: string;
+    activeFeature: boolean;
+    activeFeatureLabel: string;
+    enableNewFeature: boolean;
+    newFeatureContent: string;
+    howItWorksLink: string;
   };
   // full products
   '@ProductPage/fullProductSuccess': {
@@ -137,6 +224,16 @@ export interface ParentEmitMessage {
       maxPages: ResponseBadgesSuccess['data']['maxPage'];
     };
   };
+  '@BadgesPage/getVariantBadgesSuccess': {
+    data: {
+      items: ResponseBadgesSuccess['data']['items'];
+    };
+  };
+
+  '@BadgesPage/getVariantBadgesFailure': {
+    message: ResponseBadgesError['message'];
+  };
+
   '@BadgesPage/getBadgesFailure': {
     message: ResponseBadgesError['message'];
   };
@@ -153,6 +250,7 @@ export interface ParentEmitMessage {
 
   '@CUDBadge/createBadgesSuccess': {
     data: Array<{ id: string; date?: string; slug: string }>;
+    message: string;
   };
   '@CUDBadge/createBadgesFailure': {
     message: string;
@@ -160,6 +258,7 @@ export interface ParentEmitMessage {
 
   '@CUDBadge/updateBadgesSuccess': {
     data: Array<{ id: string; slug: string; date: string }>;
+    message: string;
   };
   '@CUDBadge/updateBadgesFailure': {
     message: string;
@@ -167,6 +266,7 @@ export interface ParentEmitMessage {
 
   '@CUDBadge/deleteBadgesSuccess': {
     id: string;
+    message: string;
   };
   '@CUDBadge/deleteBadgeFailure': {
     message: string;
@@ -183,18 +283,23 @@ export interface ParentEmitMessage {
   // cud automatic
   '@CUDAutomatic/createAutomaticSuccess': {
     id: string;
+    description: string;
+    message: string;
   };
   '@CUDAutomatic/createAutomaticFailure': {
     message: string;
   };
   '@CUDAutomatic/updateAutomaticSuccess': {
     id: string;
+    description: string;
+    message: string;
   };
   '@CUDAutomatic/updateAutomaticFailure': {
     message: string;
   };
   '@CUDAutomatic/deactiveAutomaticSuccess': {
     id: string;
+    message: string;
   };
   '@CUDAutomatic/deactiveAutomaticFailure': {
     message: string;
@@ -202,6 +307,8 @@ export interface ParentEmitMessage {
   '@CUDAutomatic/deleteAutomaticSuccess': {
     id: string;
     urlImage: string;
+    description: string;
+    message: string;
   };
   '@CUDAutomatic/deleteAutomaticFailure': {
     message: string;

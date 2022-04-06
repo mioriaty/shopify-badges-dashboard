@@ -18,7 +18,7 @@ function* handleDeleteBadge({ payload }: ReturnType<typeof deleteBadge.request>)
     const _dataSuccess = res.data as ResponseSuccess;
     if (_dataError.code) throw new Error(_dataError.message);
     console.log('_dataSuccess', _dataSuccess);
-    postmessage.emit('@CUDBadge/deleteBadgesSuccess', { id: _dataSuccess.data.id });
+    postmessage.emit('@CUDBadge/deleteBadgesSuccess', { id: _dataSuccess.data.id, message: _dataSuccess.message });
     yield put(deleteBadge.success(payload));
   } catch (err) {
     yield put(deleteBadge.failure(payload));

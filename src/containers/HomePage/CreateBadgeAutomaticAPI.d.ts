@@ -13,6 +13,7 @@ export interface ResponseSuccess {
 export interface Data {
   id: string;
   date: string;
+  description: string;
 }
 
 export interface Params {
@@ -21,4 +22,12 @@ export interface Params {
   title: string;
   description: string;
   config: string;
+  status?: 'active' | 'deactive';
+  interval?: string;
+  discount?: string;
+  tagSelected?: string;
+  quantity?: string;
+  filter?: string;
+  atLeast?: string;
+  baseUrl: string;
 }

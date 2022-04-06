@@ -1,5 +1,5 @@
 import { all, call, spawn, delay } from 'redux-saga/effects';
-import { sagaAutomatics, sagaCUDBadge, sagasBadges, sagasFullProducts, sagasManualProducts } from 'containers/HomePage';
+import { sagaAutomatics, sagaCUDBadge, sagaDocuments, sagasBadges, sagasFullProducts, sagasManualProducts } from 'containers/HomePage';
 import { sagasInitializationPage } from 'containers/InitializationPage';
 import { sagasLoginPage } from 'containers/LoginPage';
 
@@ -11,6 +11,7 @@ const sagas = [
   ...sagaCUDBadge,
   ...sagaAutomatics,
   ...sagasLoginPage,
+  ...sagaDocuments,
 ];
 
 // https://github.com/redux-saga/redux-saga/issues/760#issuecomment-273737022

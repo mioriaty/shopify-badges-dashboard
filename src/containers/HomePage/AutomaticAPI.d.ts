@@ -11,6 +11,7 @@ export interface ResponseSuccess {
 
 export interface Data {
   items: Items[];
+  maxPages: number;
 }
 
 export interface Items {

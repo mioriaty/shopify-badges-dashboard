@@ -27,6 +27,7 @@ export interface WordpressProduct {
   title: string;
   image: FeaturedImage;
   link: string;
+  handle: string;
   manual: {
     id: string;
     badge_id: string;
@@ -43,11 +44,12 @@ export interface Data {
   title: string;
   createdAt: string;
   priceRangeV2: PriceRangeV2;
-  featuredImage: FeaturedImage;
+  image: FeaturedImage;
   handle: string;
   manual: any | [];
   isSelected: boolean;
   cursor: string;
+  link: string;
 }
 
 export interface PriceRangeV2 {

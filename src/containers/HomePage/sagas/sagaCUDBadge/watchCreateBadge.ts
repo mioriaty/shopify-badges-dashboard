@@ -13,7 +13,7 @@ function* handleCreateBadge({ payload }: ReturnType<typeof createBadge.request>)
       url: 'manual-products',
       method: 'post',
       data: {
-        badge_id,
+        badgeUrl: badge_id,
         config,
         slugs: slug.join(','),
         productIDs: productIds.join(','),
@@ -22,7 +22,7 @@ function* handleCreateBadge({ payload }: ReturnType<typeof createBadge.request>)
     const _dataError = res.data as ResponseError;
     const _dataSuccess = res.data as ResponseSuccess;
     if (_dataError.code) throw new Error(_dataError.message);
-    postmessage.emit('@CUDBadge/createBadgesSuccess', { data: _dataSuccess.data.items });
+    postmessage.emit('@CUDBadge/createBadgesSuccess', { data: _dataSuccess.data.items, message: _dataSuccess.message });
     yield put(createBadge.success(payload));
   } catch (err) {
     const _err = err as Error;

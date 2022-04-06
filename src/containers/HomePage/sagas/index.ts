@@ -3,3 +3,4 @@ export * from './sagaBadges';
 export * from './sagaCUDBadge';
 export * from './sagaFullProducts';
 export * from './sagaManualProducts';
+export * from './sagaDocuments/sagaDocuments';

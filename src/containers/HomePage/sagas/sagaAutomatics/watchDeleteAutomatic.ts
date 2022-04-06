@@ -17,7 +17,12 @@ function* handleDeleteAutomatic({ payload }: ReturnType<typeof deleteAutomatic.r
     const _dataSuccess = res.data as ResponseSuccess;
     if (_dataError.code) throw new Error(_dataError.message);
     console.log(_dataSuccess);
-    postmessage.emit('@CUDAutomatic/deleteAutomaticSuccess', { id: _dataSuccess.data.id, urlImage: _dataSuccess.data.urlImage });
+    postmessage.emit('@CUDAutomatic/deleteAutomaticSuccess', {
+      id: _dataSuccess.data.id,
+      urlImage: _dataSuccess.data.urlImage,
+      description: _dataSuccess.status,
+      message: _dataSuccess.message,
+    });
     yield put(deleteAutomatic.success(payload));
   } catch (err) {
     yield put(deleteAutomatic.failure(payload));

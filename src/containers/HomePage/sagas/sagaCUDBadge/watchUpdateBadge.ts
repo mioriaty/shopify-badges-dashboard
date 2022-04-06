@@ -13,7 +13,7 @@ function* handleUpdateBadge({ payload }: ReturnType<typeof updateBadge.request>)
       url: `manual-products`,
       method: 'put',
       data: {
-        badge_id,
+        badgeUrl: badge_id,
         config,
         slugs: slug.join(','),
         ids: id.join(','),
@@ -24,7 +24,7 @@ function* handleUpdateBadge({ payload }: ReturnType<typeof updateBadge.request>)
     const _dataSuccess = res.data as ResponseSuccess;
     if (_dataError.code) throw new Error(_dataError.message);
     console.log('_dataSuccess', _dataSuccess);
-    postmessage.emit('@CUDBadge/updateBadgesSuccess', { data: _dataSuccess.data.items });
+    postmessage.emit('@CUDBadge/updateBadgesSuccess', { data: _dataSuccess.data.items, message: _dataSuccess.message });
     yield put(updateBadge.success(payload));
   } catch (err) {
     const _err = err as Error;

@@ -9,6 +9,7 @@ import { initializationSelector } from '../InitializationPage';
 import { useCreateAutomatic, useDeleteAutomatic, useGetAutomatics, useUpdateAutomatic } from './actions/actionAutomaticProducts';
 import { useChangeActiveKey as useChangeActiveKeyBadges, useGetBadges, useLoadmoreBadges } from './actions/actionBadges';
 import { useCreateBadge, useDeleteBadge, useUpdateBadge } from './actions/actionCUDBadge';
+import { useGetDocuments } from './actions/actionDoucments';
 import { useChangeActiveKey as useChangeActiveKeyFullProducts, useGetFullProducts, useLoadmoreFullProducts } from './actions/actionFullProducts';
 import {
   useChangeActiveKey as useChangeActiveKeyManualProducts,
@@ -36,6 +37,7 @@ export const HomePage = () => {
   const changeActiveKeyBadges = useChangeActiveKeyBadges();
   const loadmoreFullProducts = useLoadmoreFullProducts();
   const loadmoreManualProducts = useLoadmoreManualProducts();
+  const getDocuments = useGetDocuments();
 
   // manual
   const pmFullProduct = useRef<(() => void) | undefined>();
@@ -56,23 +58,16 @@ export const HomePage = () => {
   const pmInit = useRef<(() => void) | undefined>();
   const pmOpenTidio = useRef<(() => void) | undefined>();
   const pmSendReview = useRef<(() => void) | undefined>();
-  const pmSendPublish = useRef<(() => void) | undefined>();
+
+  // another
+  const pmTemplate = useRef<(() => void) | undefined>();
+  const pmGoDocument = useRef<(() => void) | undefined>();
+  const pmOpenDocument = useRef<(() => void) | undefined>();
+
   const { tidioId } = useSelector(initializationSelector);
   const { initTidioChat } = useTidioChat(tidioId);
-  // const { initCrispChat } = useCrispChat();
 
   const { shopDomain, themeId } = useSelector(initializationSelector);
-  const pmTemplate = useRef<(() => void) | undefined>();
-
-  useEffect(() => {
-    pmTemplate.current = postmessage.on('@InitializationPage/getTemplate', () => {
-      postmessage.emit('@InitializationPage/sendTemplate', { template: 'wordpress' });
-    });
-    return () => {
-      pmTemplate.current?.();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (tidioId) {
@@ -81,6 +76,35 @@ export const HomePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tidioId]);
 
+  // init page
+  useEffect(() => {
+    pmTemplate.current = postmessage.on('@InitializationPage/getTemplate', () => {
+      postmessage.emit('@InitializationPage/sendTemplate', { template: 'wordpress' });
+    });
+
+    pmInit.current = postmessage.on('@InitializationPage/request', () => {
+      postmessage.emit('@InitializationPage/success', {
+        shopDomain,
+        themeId,
+        activeFeature: true,
+        activeFeatureLabel: '',
+        currencyFormat: '',
+        enableNewFeature: true,
+        feedBackMail: '',
+        howItWorksLink: '',
+        reviewUrl: ' ',
+        newFeatureContent: '',
+      });
+    });
+
+    return () => {
+      pmTemplate.current?.();
+      pmInit.current?.();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // send reviews
   useEffect(() => {
     pmSendReview.current = postmessage.on('@SendReview', async () => {
       await fetchAPI.request({
@@ -93,178 +117,171 @@ export const HomePage = () => {
     };
   }, []);
 
+  // get documents
   useEffect(() => {
-    pmSendPublish.current = postmessage.on('@SendPublish', async () => {
-      await fetchAPI.request({
-        url: 'me/publish',
-        method: 'POST',
-      });
+    pmGoDocument.current = postmessage.on('@Document/getDocuments/request', payload => {
+      const { s } = payload;
+      getDocuments.request({ s });
     });
+
     return () => {
-      pmSendPublish.current?.();
+      pmGoDocument.current?.();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // navigation
   useEffect(() => {
     pmOpenTidio.current = postmessage.on('@Navigation/RequestFeature', () => {
       window.tidioChatApi.open();
       window.tidioChatApi.messageFromVisitor('I want to request more features for Magic Badges');
     });
+    pmOpenDocument.current = postmessage.on('@Navigation/OpenDocument', () => {
+      window.open('https://product-badges.wiloke.com/');
+    });
+
     return () => {
       pmOpenTidio.current?.();
+      pmOpenDocument.current?.();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    pmInit.current = postmessage.on('@InitializationPage/request', () => {
-      postmessage.emit('@InitializationPage/success', { shopDomain, themeId });
-    });
-    return () => {
-      pmInit.current?.();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  // automatics
   useEffect(() => {
     pmGetAutomatic.current = postmessage.on('@Automatic/getAutomaticBadgesRequest', () => {
       getAutomatic.request(undefined);
     });
-    return () => {
-      pmGetAutomatic.current?.();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     pmCreateAutomatic.current = postmessage.on('@CUDAutomatic/createAutomaticRequest', payload => {
-      const { badge_id, config, description, postType, title } = payload;
-      createAutomatic.request({ badge_id, config, description, postType, title });
+      const {
+        badge_id,
+        config,
+        description,
+        postType,
+        title,
+        baseUrl,
+        atLeast,
+        discount,
+        filter,
+        interval,
+        quantity,
+        status,
+        tagsSelected,
+      } = payload;
+      createAutomatic.request({
+        badge_id,
+        config,
+        description,
+        postType,
+        title,
+        baseUrl,
+        atLeast,
+        discount,
+        filter,
+        interval,
+        quantity,
+        status,
+        tagSelected: tagsSelected,
+      });
     });
-    return () => {
-      pmCreateAutomatic.current?.();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  useEffect(() => {
     pmUpdateAutomatic.current = postmessage.on('@CUDAutomatic/updateAutomaticRequest', payload => {
-      const { badge_id, config, description, id, title } = payload;
-      updateAutomatic.request({ badge_id, config, description, id, title });
+      const { badge_id, config, description, id, title, baseUrl, atLeast, discount, filter, interval, quantity, status, tagsSelected } = payload;
+      updateAutomatic.request({
+        badge_id,
+        config,
+        description,
+        id,
+        title,
+        baseUrl,
+        atLeast,
+        discount,
+        filter,
+        interval,
+        quantity,
+        status,
+        tagSelected: tagsSelected,
+      });
     });
-    return () => {
-      pmUpdateAutomatic.current?.();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  useEffect(() => {
     pmDeleteAutomatic.current = postmessage.on('@CUDAutomatic/deleteAutomaticRequest', payload => {
       const { id, postType } = payload;
       deleteAutomatic.request({ id, postType });
     });
     return () => {
+      pmCreateAutomatic.current?.();
+      pmUpdateAutomatic.current?.();
       pmDeleteAutomatic.current?.();
+      pmGetAutomatic.current?.();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // products page
   useEffect(() => {
     pmFullProduct.current = postmessage.on('@ProductPage/fullProductRequest', payload => {
       const { searchKey } = payload;
       changeActiveKeyFullProducts(searchKey);
       getFullProducts.request(undefined);
     });
-    return () => {
-      pmFullProduct.current?.();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  useEffect(() => {
     pmLoadMoreFull.current = postmessage.on('@ProductPage/fullProductLoadMoreRequest', () => {
       loadmoreFullProducts.request(undefined);
     });
-    return () => {
-      pmLoadMoreFull.current?.();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  useEffect(() => {
     pmLoadMoreManual.current = postmessage.on('@ProductPage/manualProductLoadMoreRequest', () => {
       loadmoreManualProducts.request(undefined);
     });
-    return () => {
-      pmLoadMoreManual.current?.();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  useEffect(() => {
     pmManualProducts.current = postmessage.on('@ProductPage/manualProductRequest', payload => {
       const { searchKey } = payload;
       changeActiveKeyManualProducts(searchKey);
       getManualProducts.request(undefined);
     });
+
     return () => {
+      pmFullProduct.current?.();
+      pmLoadMoreFull.current?.();
+      pmLoadMoreManual.current?.();
       pmManualProducts.current?.();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Badges
   useEffect(() => {
     pmGetBadges.current = postmessage.on('@BadgesPage/getBadgesRequest', payload => {
       const { searchKey, taxName, taxSlugs, limit } = payload;
       changeActiveKeyBadges(searchKey);
       getBadges.request({ taxName, taxSlugs, limit });
     });
-    return () => {
-      pmGetBadges.current?.();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  useEffect(() => {
     pmLoadMoreBadge.current = postmessage.on('@BadgesPage/loadMoreBadgesRequest', payload => {
       const { limit } = payload;
       loadMoreBadges.request({ limit });
     });
-    return () => {
-      pmLoadMoreBadge.current?.();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  useEffect(() => {
     pmCreateBadges.current = postmessage.on('@CUDBadge/createBadgesRequest', payload => {
       const { badge_id, config, id, slug, productIds } = payload;
       createBadge.request({ id, badge_id, config, slug, productIds });
     });
-    return () => {
-      pmCreateBadges.current?.();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  useEffect(() => {
     pmUpdateBadge.current = postmessage.on('@CUDBadge/updateBadgesRequest', payload => {
       const { badge_id, config, id, slug, productIds } = payload;
       updateBadge.request({ badge_id, config, id: id, slug, productIds });
     });
-    return () => {
-      pmUpdateBadge.current?.();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  useEffect(() => {
     pmDeleteBadges.current = postmessage.on('@CUDBadge/deleteBadgesRequest', payload => {
       const { id } = payload;
       deleteBadge.request({ ids: [id] });
     });
+
     return () => {
+      pmCreateBadges.current?.();
+      pmUpdateBadge.current?.();
       pmDeleteBadges.current?.();
+      pmGetBadges.current?.();
+      pmLoadMoreBadge.current?.();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
