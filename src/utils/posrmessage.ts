@@ -4,7 +4,7 @@ import { Data, ResponseError, ResponseSuccess } from 'containers/HomePage/Produc
 import { createPostMessage } from 'wiloke-react-core/utils';
 import { ResponseSuccess as TagsSuccess } from 'containers/HomePage/TagsAPI';
 // export const FRONTEND_URL = process.env.FRONT_END_URL || 'https://badges-dashboard.netlify.app/';
-export const FRONTEND_URL = process.env.FRONT_END_URL || 'http://localhost:3000/';
+export const FRONTEND_URL = process.env.FRONT_END_URL || 'https://badges-dashboard.netlify.app/';
 import { DocumentsData } from 'containers/HomePage/DocumentAPI';
 import { RecommendItem } from 'containers/HomePage/FeatureAPI';
 
