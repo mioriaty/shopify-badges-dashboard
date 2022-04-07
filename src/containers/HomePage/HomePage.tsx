@@ -69,7 +69,7 @@ export const HomePage = () => {
   const { tidioId } = useSelector(initializationSelector);
   const { initTidioChat } = useTidioChat(tidioId);
 
-  const { shopDomain, themeId } = useSelector(initializationSelector);
+  const { shopDomain, themeId, currencyFormat } = useSelector(initializationSelector);
 
   useEffect(() => {
     if (tidioId) {
@@ -90,7 +90,7 @@ export const HomePage = () => {
         themeId,
         activeFeature: true,
         activeFeatureLabel: '',
-        currencyFormat: '',
+        currencyFormat: currencyFormat ?? '',
         enableNewFeature: true,
         feedBackMail: '',
         howItWorksLink: '',

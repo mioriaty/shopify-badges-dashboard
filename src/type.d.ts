@@ -28,5 +28,6 @@ declare global {
     url: string;
     productName: string;
     youtubePreviewUrl: string;
+    currencyFormat: string;
   }
 }

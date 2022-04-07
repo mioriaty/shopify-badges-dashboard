@@ -25,6 +25,7 @@ export const InitializationPage = () => {
         token,
         url,
         youtubePreviewUrl,
+        currencyFormat,
       } = payload;
 
       getWordpressInfo({
@@ -38,6 +39,7 @@ export const InitializationPage = () => {
         token,
         url,
         youtubePreviewUrl,
+        currencyFormat,
       });
 
       getPurchaseCode.request({ clientSite, email, productName, purchaseCode });

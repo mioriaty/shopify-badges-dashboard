@@ -17,6 +17,7 @@ interface State {
   token?: string;
   url?: string;
   youtubePreviewUrl?: string;
+  currencyFormat?: string;
 }
 
 type Actions = ActionTypes<typeof initialization | typeof getWordpressInfo | typeof setPurchaseCode>;
@@ -35,6 +36,7 @@ const defaultState: State = {
   token: '',
   url: '',
   youtubePreviewUrl: '',
+  currencyFormat: '',
 };
 
 export const reducerInitialization = createReducer<State, Actions>(defaultState, [
@@ -74,6 +76,7 @@ export const reducerInitialization = createReducer<State, Actions>(defaultState,
       token,
       url,
       youtubePreviewUrl,
+      currencyFormat,
     } = action.payload;
     return {
       ...state,
@@ -87,6 +90,7 @@ export const reducerInitialization = createReducer<State, Actions>(defaultState,
       token,
       url,
       youtubePreviewUrl,
+      currencyFormat,
     };
   }),
   handleAction('@Auth/setPurchaseCode', ({ state, action }) => ({ ...state, purchaseCode: action.payload.purchaseCode })),
