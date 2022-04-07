@@ -6,31 +6,45 @@ import { actionGetPurchaseCode } from '../actions/actionLogin';
 
 interface LoginPageSuccess {
   data: {
-    isVerifications: boolean;
+    hasPurchaseCode: boolean;
+    purchaseCode: string;
   };
   code: number;
   message: string;
   status: string;
 }
 
-function* handleLogin(_: ReturnType<typeof actionGetPurchaseCode.request>) {
+function* handleLogin({ payload }: ReturnType<typeof actionGetPurchaseCode.request>) {
+  const { clientSite, email, productName, purchaseCode } = payload;
   try {
     const res: AxiosResponse<LoginPageSuccess> = yield retry(3, 1000, fetchAPI.request, {
       url: 'purchase-code',
       baseURL: '',
       method: 'get',
     });
-    if (res.data.status === 'success') {
-      yield put(
-        actionGetPurchaseCode.success({
-          messageResponse: res.data.message,
-          isVerifications: res.data.data.isVerifications,
-          statusResponse: res.data.status,
-        }),
-      );
-    }
-    if (res.data.status === 'error') {
-      yield put(actionGetPurchaseCode.failure({ message: res.data.message }));
+
+    const _responseData = res.data;
+
+    yield put(
+      actionGetPurchaseCode.success({
+        messageResponse: _responseData.message,
+        hasPurchaseCode: _responseData.data.hasPurchaseCode,
+        statusResponse: _responseData.status,
+      }),
+    );
+
+    if (_responseData.data.hasPurchaseCode === false) {
+      yield retry(3, 1000, fetchAPI.request, {
+        url: 'purchase-code',
+        baseURL: '',
+        method: 'post',
+        data: {
+          clientSite,
+          email,
+          productName,
+          purchaseCode: purchaseCode ? purchaseCode : 'free',
+        },
+      });
     }
   } catch (error) {
     const _err = error as Error;

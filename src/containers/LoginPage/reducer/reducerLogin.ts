@@ -24,6 +24,8 @@ interface LoginState {
   message: string;
   popupPurchaseCode: boolean;
   isVerifications: boolean;
+  hasPurchaseCode: boolean;
+  getPurchaseCodeStatus: Status;
 }
 
 const defaultState: LoginState = {
@@ -34,7 +36,9 @@ const defaultState: LoginState = {
   message: '',
   popupPurchaseCode: false,
   isVerifications: false,
+  hasPurchaseCode: false,
   verificationStatus: 'idle',
+  getPurchaseCodeStatus: 'idle',
 };
 
 export const reducerLogin = createReducer<LoginState, LoginAction>(defaultState, [
@@ -99,14 +103,20 @@ export const reducerLogin = createReducer<LoginState, LoginAction>(defaultState,
   handleAction('@Auth/GetPurchaseCodeRequest', ({ state }) => {
     return {
       ...state,
-      verificationStatus: 'loading',
+      getPurchaseCodeStatus: 'loading',
     };
   }),
   handleAction('@Auth/GetPurchaseCodeSuccess', ({ state, action }) => {
     return {
       ...state,
-      verificationStatus: 'success',
-      isVerifications: action.payload.isVerifications,
+      getPurchaseCodeStatus: 'success',
+      hasPurchaseCode: action.payload.hasPurchaseCode,
+    };
+  }),
+  handleAction('@Auth/GetPurchaseCodeFailure', ({ state }) => {
+    return {
+      ...state,
+      getPurchaseCodeStatus: 'failure',
     };
   }),
 ]);

@@ -23,8 +23,8 @@ export const actionGetPurchaseCode = createAsyncAction([
   '@Auth/GetPurchaseCodeSuccess',
   '@Auth/GetPurchaseCodeFailure',
 ])<
-  { clientSite: string; purchaseCode: string; email: string },
-  { isVerifications: boolean; statusResponse: string; messageResponse: string },
+  { clientSite: string; purchaseCode: string; email: string; productName: string },
+  { hasPurchaseCode: boolean; statusResponse: string; messageResponse: string },
   { message: string }
 >();
 export const actionPopupPurchaseCode = createAction('@Auth/actionPopupPurchaseCode', (show: boolean) => ({ show }));
