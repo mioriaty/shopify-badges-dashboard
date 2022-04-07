@@ -6,10 +6,7 @@ export const actionValidateApp = createAsyncAction([
   '@Auth/actionValidateAppFailure',
 ])<{ username: string; password: string; url: string }, { username: string; password: string; hasPassed: boolean }, { message: string }>();
 
-export const useActionValidateApp = createDispatchAsyncAction(actionValidateApp);
-
 export const actionConfirmValidate = createAction('@Auth/actionConfirmValidate', (hasPassed: boolean) => ({ hasPassed }));
-export const useConfirmValidate = createDispatchAction(actionConfirmValidate);
 
 export const actionVerifyPurchaseCode = createAsyncAction([
   '@Auth/verifyPurchaseCodeRequest',
@@ -21,8 +18,6 @@ export const actionVerifyPurchaseCode = createAsyncAction([
   { message: string }
 >();
 
-export const useVerifyPurchaseCode = createDispatchAsyncAction(actionVerifyPurchaseCode);
-
 export const actionGetPurchaseCode = createAsyncAction([
   '@Auth/GetPurchaseCodeRequest',
   '@Auth/GetPurchaseCodeSuccess',
@@ -32,8 +27,12 @@ export const actionGetPurchaseCode = createAsyncAction([
   { isVerifications: boolean; statusResponse: string; messageResponse: string },
   { message: string }
 >();
+export const actionPopupPurchaseCode = createAction('@Auth/actionPopupPurchaseCode', (show: boolean) => ({ show }));
+export const setPurchaseCode = createAction('@Auth/setPurchaseCode', (purchaseCode: string) => ({ purchaseCode }));
 
 export const useGetPurchaseCode = createDispatchAsyncAction(actionGetPurchaseCode);
-
-export const actionPopupPurchaseCode = createAction('@Auth/actionPopupPurchaseCode', (show: boolean) => ({ show }));
 export const usePopupPurchaseCode = createDispatchAction(actionPopupPurchaseCode);
+export const useActionValidateApp = createDispatchAsyncAction(actionValidateApp);
+export const useConfirmValidate = createDispatchAction(actionConfirmValidate);
+export const useVerifyPurchaseCode = createDispatchAsyncAction(actionVerifyPurchaseCode);
+export const useSetPurchaseCode = createDispatchAction(setPurchaseCode);

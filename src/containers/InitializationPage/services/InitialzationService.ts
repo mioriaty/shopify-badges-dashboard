@@ -19,11 +19,7 @@ const InitialzationServiceFlow = async ({ app, shopDomain }: Params) => {
 
 export class InitialzationService {
   public async initialization(params: Params) {
-    try {
-      const res = await InitialzationServiceFlow(params);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    const res = await InitialzationServiceFlow(params);
+    return res;
   }
 }

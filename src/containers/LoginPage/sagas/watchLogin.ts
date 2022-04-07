@@ -1,6 +1,7 @@
 import { put, retry, takeLatest } from '@redux-saga/core/effects';
 import { AxiosResponse } from 'axios';
 import fetchAPI from 'utils/functions/fetchAPI';
+import { pmAjax } from 'utils/initPostmesssage';
 import { getActionType } from 'wiloke-react-core/utils';
 import { actionValidateApp } from '../actions/actionLogin';
 
@@ -23,6 +24,7 @@ function* handleLogin({ payload }: ReturnType<typeof actionValidateApp.request>)
     });
     if (res.data.status === 'success') {
       yield put(actionValidateApp.success({ username, password, hasPassed: res.data.data.hasPassed }));
+      pmAjax.emit('@HasPassed', { hasPassed: res.data.data.hasPassed });
     }
     if (res.data.status === 'error') {
       yield put(actionValidateApp.failure({ message: res.data.message }));

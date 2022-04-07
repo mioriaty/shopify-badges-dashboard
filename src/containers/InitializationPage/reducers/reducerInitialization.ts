@@ -1,3 +1,4 @@
+import { setPurchaseCode } from 'containers/LoginPage';
 import { ActionTypes, createReducer, handleAction } from 'wiloke-react-core/utils';
 import { getWordpressInfo, initialization } from '../actions/actionInitializationPage';
 
@@ -18,7 +19,7 @@ interface State {
   youtubePreviewUrl?: string;
 }
 
-type Actions = ActionTypes<typeof initialization | typeof getWordpressInfo>;
+type Actions = ActionTypes<typeof initialization | typeof getWordpressInfo | typeof setPurchaseCode>;
 
 const defaultState: State = {
   statusInitialization: 'idle',
@@ -88,4 +89,5 @@ export const reducerInitialization = createReducer<State, Actions>(defaultState,
       youtubePreviewUrl,
     };
   }),
+  handleAction('@Auth/setPurchaseCode', ({ state, action }) => ({ ...state, purchaseCode: action.payload.purchaseCode })),
 ]);

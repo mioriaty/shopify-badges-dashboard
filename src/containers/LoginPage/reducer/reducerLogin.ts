@@ -1,10 +1,10 @@
 import { ActionTypes, createReducer, handleAction } from 'wiloke-react-core/utils';
 import {
   actionConfirmValidate,
-  actionValidateApp,
-  actionPopupPurchaseCode,
-  actionVerifyPurchaseCode,
   actionGetPurchaseCode,
+  actionPopupPurchaseCode,
+  actionValidateApp,
+  actionVerifyPurchaseCode,
 } from '../actions/actionLogin';
 
 type LoginAction = ActionTypes<
