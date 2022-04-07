@@ -13,7 +13,7 @@ function* handleCreateAutomatic({ payload }: ReturnType<typeof createAutomatic.r
       url: 'automatics',
       method: 'post',
       data: {
-        badgeUrl: badge_id ?? baseUrl,
+        badgeUrl: baseUrl,
         badge_id: badge_id,
         config: config,
         description: description,

@@ -6,7 +6,7 @@ import { postmessage } from 'utils/posrmessage';
 import { View } from 'wiloke-react-core';
 import { IframePage } from '../IframePage/IframePage';
 import { initializationSelector } from '../InitializationPage';
-import { useCreateAutomatic, useDeleteAutomatic, useGetAutomatics, useUpdateAutomatic } from './actions/actionAutomaticProducts';
+import { useCreateAutomatic, useDeleteAutomatic, useGetAutomatics, useSortAutomatic, useUpdateAutomatic } from './actions/actionAutomaticProducts';
 import { useChangeActiveKey as useChangeActiveKeyBadges, useGetBadges, useLoadmoreBadges } from './actions/actionBadges';
 import { useCreateBadge, useDeleteBadge, useUpdateBadge } from './actions/actionCUDBadge';
 import { useGetDocuments } from './actions/actionDoucments';
@@ -38,6 +38,7 @@ export const HomePage = () => {
   const loadmoreFullProducts = useLoadmoreFullProducts();
   const loadmoreManualProducts = useLoadmoreManualProducts();
   const getDocuments = useGetDocuments();
+  const sortAutomatic = useSortAutomatic();
 
   // manual
   const pmFullProduct = useRef<(() => void) | undefined>();
@@ -63,6 +64,7 @@ export const HomePage = () => {
   const pmTemplate = useRef<(() => void) | undefined>();
   const pmGoDocument = useRef<(() => void) | undefined>();
   const pmOpenDocument = useRef<(() => void) | undefined>();
+  const pmSortPostType = useRef<(() => void) | undefined>();
 
   const { tidioId } = useSelector(initializationSelector);
   const { initTidioChat } = useTidioChat(tidioId);
@@ -204,6 +206,11 @@ export const HomePage = () => {
       });
     });
 
+    pmSortPostType.current = postmessage.on('@Automatic/sortListPostType', payload => {
+      const { listPostType } = payload;
+      sortAutomatic.request({ listPostType });
+    });
+
     pmDeleteAutomatic.current = postmessage.on('@CUDAutomatic/deleteAutomaticRequest', payload => {
       const { id, postType } = payload;
       deleteAutomatic.request({ id, postType });
@@ -213,6 +220,7 @@ export const HomePage = () => {
       pmUpdateAutomatic.current?.();
       pmDeleteAutomatic.current?.();
       pmGetAutomatic.current?.();
+      pmSortPostType.current?.();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

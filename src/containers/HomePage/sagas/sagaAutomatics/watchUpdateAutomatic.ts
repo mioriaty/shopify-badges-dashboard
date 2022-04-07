@@ -13,7 +13,7 @@ function* handleUpdateAutomatic({ payload }: ReturnType<typeof updateAutomatic.r
       url: `automatics/${id}`,
       method: 'put',
       data: {
-        badgeUrl: badge_id ?? baseUrl,
+        badgeUrl: baseUrl,
         badge_id: badge_id,
         config: config,
         description: description,

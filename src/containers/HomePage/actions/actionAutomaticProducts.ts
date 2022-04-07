@@ -29,7 +29,15 @@ export const deleteAutomatic = createAsyncAction([
   '@Automatic/deleteAutomaticsFailure',
 ])<DeleteParams, DeleteParams, DeleteParams>();
 
+export const sortAutomatic = createAsyncAction([
+  '@Automatic/sortAutomaticsRequest',
+  '@Automatic/sortAutomaticsSuccess',
+  '@Automatic/sortAutomaticsFailure',
+  '@Automatic/sortAutomaticsCancel',
+])<{ listPostType: string[] }, { message: string }, undefined>();
+
 export const useGetAutomatics = createDispatchAsyncAction(getAutomatics);
 export const useCreateAutomatic = createDispatchAsyncAction(createAutomatic);
 export const useUpdateAutomatic = createDispatchAsyncAction(updateAutomatic);
 export const useDeleteAutomatic = createDispatchAsyncAction(deleteAutomatic);
+export const useSortAutomatic = createDispatchAsyncAction(sortAutomatic);
