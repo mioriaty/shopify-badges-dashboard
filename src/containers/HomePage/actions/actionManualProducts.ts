@@ -6,14 +6,22 @@ export const getManualProducts = createAsyncAction([
   '@ManualProducts/getManualProductsSuccess',
   '@ManualProducts/getManualProductsFailure',
   '@ManualProducts/getManualProductsCancel',
-])<undefined, { products: ResponseSuccess['data']['items']; hasNextPage: boolean; lastCursor: string; maxPages: number }, { message: any }>();
+])<
+  undefined,
+  { products: ResponseSuccess['data']['items']; hasNextPage: boolean; lastCursor: string; maxPages: number; currentPage: number },
+  { message: any }
+>();
 
 export const loadmoreManualProducts = createAsyncAction([
   '@ManualProducts/loadmoreManualProductsRequest',
   '@ManualProducts/loadmoreManualProductsSuccess',
   '@ManualProducts/loadmoreManualProductsFailure',
   '@ManualProducts/loadmoreManualProductsCancel',
-])<undefined, { products: ResponseSuccess['data']['items']; hasNextPage: boolean; lastCursor: string; maxPages: number }, undefined>();
+])<
+  undefined,
+  { products: ResponseSuccess['data']['items']; hasNextPage: boolean; lastCursor: string; maxPages: number; currentPage: number },
+  undefined
+>();
 
 export const changeActiveKey = createAction('@ManualProducts/changeActiveKey', (payload: string) => payload);
 

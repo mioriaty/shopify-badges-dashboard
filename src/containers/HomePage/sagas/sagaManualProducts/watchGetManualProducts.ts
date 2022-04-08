@@ -12,42 +12,34 @@ let task: Task | undefined;
 
 function* handleGetManualProducts(_: ReturnType<typeof getManualProducts.request>) {
   try {
-    const { activeKey, data }: AppState['manualProducts'] = yield select((state: AppState) => state.manualProducts);
-    const { statusRequest, products, hasNextPage, lastCursor, maxPages } = data[activeKey] as Exclude<
-      AppState['manualProducts']['data'][string],
-      undefined
-    >;
-    if (statusRequest === 'success') {
-      const transformProduct = transformNewProduct(products);
-      postmessage.emit('@ProductPage/manualProductSuccess', { fullProducts: { items: transformProduct, hasNextPage, maxPages } });
-      yield put(getManualProducts.success({ products, hasNextPage, lastCursor, maxPages }));
-    } else {
-      const res: AxiosResponse<ResponseSuccess | ResponseError> = yield retry(3, 1000, fetchAPI.request, {
-        url: 'manual-products',
-        params: {
-          s: activeKey ? activeKey : undefined,
-          limit: 50,
-        } as Params,
-      });
-      const _dataError = res.data as ResponseError;
-      const _dataSuccess = res.data as ResponseSuccess;
-      if (_dataError.code) throw new Error(_dataError.message);
+    const { activeKey }: AppState['manualProducts'] = yield select((state: AppState) => state.manualProducts);
 
-      const transformProduct = transformNewProduct(_dataSuccess.data.items);
+    const res: AxiosResponse<ResponseSuccess | ResponseError> = yield retry(3, 1000, fetchAPI.request, {
+      url: 'manual-products',
+      params: {
+        s: activeKey ? activeKey : undefined,
+        limit: 50,
+      } as Params,
+    });
+    const _dataError = res.data as ResponseError;
+    const _dataSuccess = res.data as ResponseSuccess;
+    if (_dataError.code) throw new Error(_dataError.message);
 
-      postmessage.emit('@ProductPage/manualProductSuccess', {
-        fullProducts: { items: transformProduct, hasNextPage: _dataSuccess.data.hasNextPage, maxPages: _dataSuccess.data.maxPages },
-      });
+    const transformProduct = transformNewProduct(_dataSuccess.data.items);
 
-      yield put(
-        getManualProducts.success({
-          products: _dataSuccess.data.items,
-          hasNextPage: _dataSuccess.data.hasNextPage,
-          lastCursor: '',
-          maxPages: _dataSuccess.data.maxPages,
-        }),
-      );
-    }
+    postmessage.emit('@ProductPage/manualProductSuccess', {
+      fullProducts: { items: transformProduct, hasNextPage: _dataSuccess.data.hasNextPage, maxPages: _dataSuccess.data.maxPages },
+    });
+
+    yield put(
+      getManualProducts.success({
+        products: _dataSuccess.data.items,
+        hasNextPage: _dataSuccess.data.hasNextPage,
+        lastCursor: '',
+        maxPages: _dataSuccess.data.maxPages,
+        currentPage: _dataSuccess.data.currentPage,
+      }),
+    );
   } catch (err) {
     yield put(getManualProducts.failure({ message: err }));
   }

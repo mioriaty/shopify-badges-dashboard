@@ -6,14 +6,14 @@ export const getFullProducts = createAsyncAction([
   '@FullProducts/getFullProductsSuccess',
   '@FullProducts/getFullProductsFailure',
   '@FullProducts/getFullProductsCancel',
-])<undefined, { products: WordpressProduct[]; hasNextPage: boolean; lastCursor: string; maxPages: number }, undefined>();
+])<undefined, { products: WordpressProduct[]; hasNextPage: boolean; lastCursor: string; maxPages: number; currentPage: number }, undefined>();
 
 export const loadmoreFullProducts = createAsyncAction([
   '@FullProducts/loadmoreFullProductsRequest',
   '@FullProducts/loadmoreFullProductsSuccess',
   '@FullProducts/loadmoreFullProductsFailure',
   '@FullProducts/loadmoreFullProductsCancel',
-])<undefined, { products: WordpressProduct[]; hasNextPage: boolean; lastCursor: string; maxPages: number }, undefined>();
+])<undefined, { products: WordpressProduct[]; hasNextPage: boolean; lastCursor: string; maxPages: number; currentPage: number }, undefined>();
 
 export const changeActiveKey = createAction('@FullProducts/changeActiveKey', (payload: string) => payload);
 

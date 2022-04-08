@@ -14,6 +14,7 @@ function* handleLoadmoreFullProducts(_: ReturnType<typeof loadmoreFullProducts.r
   try {
     const { activeKey, data }: AppState['fullProducts'] = yield select((state: AppState) => state.fullProducts);
     const { currentPage } = data[activeKey] as Exclude<AppState['fullProducts']['data'][string], undefined>;
+
     const res: AxiosResponse<ResponseSuccess | ResponseError> = yield retry(3, 2000, fetchAPI.request, {
       url: 'full-products',
       params: {
@@ -31,7 +32,7 @@ function* handleLoadmoreFullProducts(_: ReturnType<typeof loadmoreFullProducts.r
         items: transformedData,
         hasNextPage: _dataSuccess.data.hasNextPage,
         maxPages: _dataSuccess.data.maxPages,
-        currentPage: currentPage + 1,
+        currentPage: _dataSuccess.data.currentPage,
       },
     });
 
@@ -41,6 +42,7 @@ function* handleLoadmoreFullProducts(_: ReturnType<typeof loadmoreFullProducts.r
         hasNextPage: _dataSuccess.data.hasNextPage,
         lastCursor: '',
         maxPages: _dataSuccess.data.maxPages,
+        currentPage: _dataSuccess.data.currentPage,
       }),
     );
   } catch (err) {

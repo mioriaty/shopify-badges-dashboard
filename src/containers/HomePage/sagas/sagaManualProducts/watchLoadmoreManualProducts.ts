@@ -14,6 +14,7 @@ function* handleLoadmoreManualProducts(_: ReturnType<typeof loadmoreManualProduc
   try {
     const { activeKey, data }: AppState['manualProducts'] = yield select((state: AppState) => state.manualProducts);
     const { currentPage } = data[activeKey] as Exclude<AppState['manualProducts']['data'][string], undefined>;
+
     const res: AxiosResponse<ResponseSuccess | ResponseError> = yield retry(3, 1000, fetchAPI.request, {
       url: 'manual-products',
       params: {
@@ -31,7 +32,7 @@ function* handleLoadmoreManualProducts(_: ReturnType<typeof loadmoreManualProduc
         items: transformedData,
         hasNextPage: _dataSuccess.data.hasNextPage,
         maxPages: _dataSuccess.data.maxPages,
-        currentPage: currentPage + 1,
+        currentPage: _dataSuccess.data.currentPage,
       },
     });
 
@@ -41,6 +42,7 @@ function* handleLoadmoreManualProducts(_: ReturnType<typeof loadmoreManualProduc
         hasNextPage: _dataSuccess.data.hasNextPage,
         lastCursor: '',
         maxPages: _dataSuccess.data.maxPages,
+        currentPage: _dataSuccess.data.currentPage,
       }),
     );
   } catch (err) {

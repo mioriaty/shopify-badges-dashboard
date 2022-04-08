@@ -56,7 +56,7 @@ export const reducerManualProducts = createReducer<State, Actions>(defaultState,
   }),
   handleAction('@ManualProducts/getManualProductsSuccess', ({ state, action }) => {
     const { activeKey, data } = state;
-    const { products, hasNextPage, lastCursor, maxPages } = action.payload;
+    const { products, hasNextPage, lastCursor, maxPages, currentPage } = action.payload;
     return {
       ...state,
       data: {
@@ -68,6 +68,7 @@ export const reducerManualProducts = createReducer<State, Actions>(defaultState,
           hasNextPage,
           lastCursor,
           maxPages,
+          currentPage,
         },
       },
     };
@@ -113,7 +114,7 @@ export const reducerManualProducts = createReducer<State, Actions>(defaultState,
   }),
   handleAction('@ManualProducts/loadmoreManualProductsSuccess', ({ state, action }) => {
     const { activeKey, data } = state;
-    const { products, hasNextPage, lastCursor, maxPages } = action.payload;
+    const { products, hasNextPage, lastCursor, maxPages, currentPage } = action.payload;
     return {
       ...state,
       data: {
@@ -124,7 +125,7 @@ export const reducerManualProducts = createReducer<State, Actions>(defaultState,
           products: (data[activeKey] ?? defaultData).products.concat(products),
           lastCursor,
           hasNextPage,
-          currentPage: (data[activeKey] ?? defaultData).currentPage + 1,
+          currentPage: currentPage,
           maxPages,
         },
       },

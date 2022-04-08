@@ -19,6 +19,7 @@ export interface ResponseSuccess {
     items: WordpressProduct[];
     hasNextPage: boolean;
     maxPages: number;
+    currentPage: number;
   };
 }
 
