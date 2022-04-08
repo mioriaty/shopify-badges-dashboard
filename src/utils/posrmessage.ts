@@ -15,6 +15,7 @@ export interface ParentOnMessage {
   };
   '@Navigation/OpenDocument': undefined;
   '@Navigation/DiemMyCuuThay': undefined;
+  '@Navigation/OpenModalPurchaseCode': undefined;
   '@Navigation/Feedbacks': undefined;
 
   '@Automatic/getSubTagsRequest': undefined;
@@ -125,6 +126,9 @@ export interface ParentEmitMessage {
     takenBadge: number;
     message: string;
   };
+  '@Navigation/UpdatePurchaseCode': {
+    purchaseCode: string;
+  };
   '@Badges/trackingBadges/failure': undefined;
   '@Document/getDocuments/success': {
     data: DocumentsData[];
@@ -171,6 +175,7 @@ export interface ParentEmitMessage {
     enableNewFeature: boolean;
     newFeatureContent: string;
     howItWorksLink: string;
+    purchaseCode: string;
   };
   // full products
   '@ProductPage/fullProductSuccess': {

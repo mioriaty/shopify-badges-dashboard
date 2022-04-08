@@ -4,7 +4,7 @@ export const container = (colors: Colors) => css`
   debug: ModalAtnd-Container;
 
   .ant-modal-content {
-    border-radius: 16px;
+    border-radius: 8px;
     overflow: hidden;
   }
 

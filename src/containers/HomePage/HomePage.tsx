@@ -1,3 +1,5 @@
+import { usePopupPurchaseCode } from 'containers/LoginPage';
+import { VerificationPage } from 'containers/LoginPage/VerificationPage';
 import { useTidioChat } from 'hooks/useTidioChat';
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -39,6 +41,7 @@ export const HomePage = () => {
   const loadmoreManualProducts = useLoadmoreManualProducts();
   const getDocuments = useGetDocuments();
   const sortAutomatic = useSortAutomatic();
+  const setVisible = usePopupPurchaseCode();
 
   // manual
   const pmFullProduct = useRef<(() => void) | undefined>();
@@ -65,11 +68,12 @@ export const HomePage = () => {
   const pmGoDocument = useRef<(() => void) | undefined>();
   const pmOpenDocument = useRef<(() => void) | undefined>();
   const pmSortPostType = useRef<(() => void) | undefined>();
+  const pmOpenModalPurchaseCode = useRef<(() => void) | undefined>();
 
   const { tidioId } = useSelector(initializationSelector);
   const { initTidioChat } = useTidioChat(tidioId);
 
-  const { shopDomain, themeId, currencyFormat } = useSelector(initializationSelector);
+  const { shopDomain, themeId, currencyFormat, purchaseCode } = useSelector(initializationSelector);
 
   useEffect(() => {
     if (tidioId) {
@@ -96,6 +100,7 @@ export const HomePage = () => {
         howItWorksLink: '',
         reviewUrl: ' ',
         newFeatureContent: '',
+        purchaseCode: purchaseCode ?? '',
       });
     });
 
@@ -141,10 +146,14 @@ export const HomePage = () => {
     pmOpenDocument.current = postmessage.on('@Navigation/OpenDocument', () => {
       window.open('https://product-badges.wiloke.com/');
     });
+    pmOpenModalPurchaseCode.current = postmessage.on('@Navigation/OpenModalPurchaseCode', () => {
+      setVisible(true);
+    });
 
     return () => {
       pmOpenTidio.current?.();
       pmOpenDocument.current?.();
+      pmOpenModalPurchaseCode.current?.();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -297,6 +306,7 @@ export const HomePage = () => {
   return (
     <View css={styles.container}>
       <IframePage />
+      <VerificationPage />
     </View>
   );
 };

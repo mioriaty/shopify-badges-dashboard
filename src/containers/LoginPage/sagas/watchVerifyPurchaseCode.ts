@@ -2,12 +2,14 @@ import { call, put, retry, takeLatest } from '@redux-saga/core/effects';
 import { notification } from 'antd';
 import axios, { AxiosResponse } from 'axios';
 import fetchAPI from 'utils/functions/fetchAPI';
+import { postmessage } from 'utils/posrmessage';
 import { getActionType } from 'wiloke-react-core/utils';
 import { actionPopupPurchaseCode, actionVerifyPurchaseCode } from '../actions/actionLogin';
 
 interface LoginPageSuccess {
   data: {
     isVerifications: boolean;
+    plan: string;
   };
   code: number;
   message: string;
@@ -39,6 +41,7 @@ function* handleLogin({ payload }: ReturnType<typeof actionVerifyPurchaseCode.re
           statusResponse: res.data.status,
         }),
       );
+      postmessage.emit('@Navigation/UpdatePurchaseCode', { purchaseCode: res.data.data.plan });
       notification.success({
         message: 'Congrats, you have unlocked the Premium!',
       });
