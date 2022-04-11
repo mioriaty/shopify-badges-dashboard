@@ -1,0 +1,36 @@
+{
+  "files": {
+    "ant-design.js": "/static/js/ant-design.chunk.js",
+    "antd.css": "/static/css/antd.chunk.css",
+    "antd.js": "/static/js/antd.chunk.js",
+    "axios.js": "/static/js/axios.chunk.js",
+    "lodash.js": "/static/js/lodash.chunk.js",
+    "main.js": "/static/js/main.chunk.js",
+    "rc-field-form.js": "/static/js/rc-field-form.chunk.js",
+    "rc-trigger.js": "/static/js/rc-trigger.chunk.js",
+    "rc-util.js": "/static/js/rc-util.chunk.js",
+    "react-dom.js": "/static/js/react-dom.chunk.js",
+    "react-redux.js": "/static/js/react-redux.chunk.js",
+    "redux-saga.js": "/static/js/redux-saga.chunk.js",
+    "runtime.js": "/static/js/runtime.js",
+    "wiloke-react-core.js": "/static/js/wiloke-react-core.chunk.js",
+    "static/js/13.chunk.js": "/static/js/13.chunk.js",
+    "index.html": "/index.html"
+  },
+  "entrypoints": [
+    "static/js/runtime.js",
+    "static/css/antd.chunk.css",
+    "static/js/antd.chunk.js",
+    "static/js/lodash.chunk.js",
+    "static/js/ant-design.chunk.js",
+    "static/js/wiloke-react-core.chunk.js",
+    "static/js/rc-util.chunk.js",
+    "static/js/axios.chunk.js",
+    "static/js/react-redux.chunk.js",
+    "static/js/rc-field-form.chunk.js",
+    "static/js/rc-trigger.chunk.js",
+    "static/js/redux-saga.chunk.js",
+    "static/js/react-dom.chunk.js",
+    "static/js/main.chunk.js"
+  ]
+}
