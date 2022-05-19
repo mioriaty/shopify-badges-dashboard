@@ -1,30 +1,46 @@
-import { AxiosResponse } from 'axios';
 import { Task } from 'redux-saga';
-import { fork, take, put, retry, select } from 'redux-saga/effects';
-import fetchAPI from 'utils/functions/fetchAPI';
+import { fork, put, retry, select, take } from 'redux-saga/effects';
+import { pmAjax } from 'utils/initPostmesssage';
 import { postmessage } from 'utils/posrmessage';
 import { getActionType } from 'wiloke-react-core/utils';
 import { loadmoreBadges } from '../../actions/actionBadges';
-import { Params, ResponseError, ResponseSuccess } from '../../BadgeAPI';
+import { ResponseSuccess } from '../../BadgeAPI';
 
 let task: Task | undefined;
 
-function* handleloadmoreBadges({ payload }: ReturnType<typeof loadmoreBadges.request>) {
-  try {
-    const { limit } = payload;
-    const { activeKey, data }: AppState['badges'] = yield select((state: AppState) => state.badges);
-    const { currentPage } = data[activeKey] as Exclude<AppState['badges']['data'][string], undefined>;
-    const res: AxiosResponse<ResponseSuccess | ResponseError> = yield retry(3, 1000, fetchAPI.request, {
-      url: 'default-badges',
-      params: {
-        s: activeKey ? activeKey : undefined,
-        page: currentPage + 1,
-        limit: limit ? limit : 10,
-      } as Params,
+let GetBadgesSuccess: (() => void) | undefined;
+let GetBadgesFailure: (() => void) | undefined;
+
+const GetBadgesFlow = () => {
+  return new Promise<ResponseSuccess>((resolve, reject) => {
+    GetBadgesSuccess?.();
+    GetBadgesFailure?.();
+
+    GetBadgesSuccess = pmAjax.on('loadMoreManualBadges/success', data => {
+      resolve(data);
     });
-    const _dataError = res.data as ResponseError;
-    const _dataSuccess = res.data as ResponseSuccess;
-    if (_dataError.code) throw new Error(_dataError.message);
+
+    GetBadgesFailure = pmAjax.on('loadMoreManualBadges/failure', () => {
+      reject();
+    });
+  });
+};
+
+function* handleloadmoreBadges({ payload }: ReturnType<typeof loadmoreBadges.request>) {
+  const { limit } = payload;
+  const { activeKey, data }: AppState['badges'] = yield select((state: AppState) => state.badges);
+  const { currentPage } = data[activeKey] as Exclude<AppState['badges']['data'][string], undefined>;
+
+  pmAjax.emit('loadMoreManualBadges/request', {
+    s: activeKey ? activeKey : undefined,
+    page: currentPage + 1,
+    limit: limit ? limit : 10,
+  });
+
+  try {
+    const res: Awaited<ReturnType<typeof GetBadgesFlow>> = yield retry(3, 1000, GetBadgesFlow);
+    const _dataSuccess = res;
+
     yield put(loadmoreBadges.success({ badges: _dataSuccess.data.items, maxPage: _dataSuccess.data.maxPage }));
     postmessage.emit('@BadgesPage/loadMoreBadgesSuccess', { data: { maxPages: _dataSuccess.data.maxPage, items: _dataSuccess.data.items } });
   } catch (err) {

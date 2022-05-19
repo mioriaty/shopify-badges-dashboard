@@ -1,12 +1,10 @@
-import { Login, useGetPurchaseCode } from 'containers/LoginPage';
+import { useGetPurchaseCode } from 'containers/LoginPage';
 import { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
 import { pmAjax } from 'utils/initPostmesssage';
-import { initializationSelector, useGetWordpressInfo } from '.';
+import { useGetWordpressInfo } from '.';
 
 export const InitializationPage = () => {
-  const { token } = useSelector(initializationSelector);
   const pmWpRequest = useRef<(() => void) | undefined>();
 
   const getWordpressInfo = useGetWordpressInfo();
@@ -50,8 +48,6 @@ export const InitializationPage = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  if (!token) return <Login />;
 
   return <Redirect to="/" />;
 };

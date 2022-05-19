@@ -1,29 +1,43 @@
 import { put, retry, takeEvery } from '@redux-saga/core/effects';
-import { AxiosResponse } from 'axios';
-import fetchAPI from 'utils/functions/fetchAPI';
+import { pmAjax } from 'utils/initPostmesssage';
 import { postmessage } from 'utils/posrmessage';
 import { getActionType } from 'wiloke-react-core/utils';
 import { updateBadge } from '../../actions/actionCUDBadge';
-import { ResponseError, ResponseSuccess } from '../../UpdateBadgeAPI';
+import { ResponseSuccess } from '../../UpdateBadgeAPI';
+
+let UpdateBadgesSuccess: (() => void) | undefined;
+let UpdateBadgesFailure: (() => void) | undefined;
+
+const UpdateBadgesFlow = () => {
+  return new Promise<ResponseSuccess>((resolve, reject) => {
+    UpdateBadgesSuccess?.();
+    UpdateBadgesFailure?.();
+
+    UpdateBadgesSuccess = pmAjax.on('updateManualBadges/success', data => {
+      resolve(data);
+    });
+
+    UpdateBadgesFailure = pmAjax.on('updateManualBadges/failure', () => {
+      reject();
+    });
+  });
+};
 
 function* handleUpdateBadge({ payload }: ReturnType<typeof updateBadge.request>) {
   const { id, badge_id, config, slug, productIds } = payload;
+
+  pmAjax.emit('updateManualBadges/request', {
+    badgeUrl: badge_id,
+    config,
+    slugs: slug.join(','),
+    ids: id.join(','),
+    productIDs: productIds.join(','),
+  });
+
   try {
-    const res: AxiosResponse<ResponseSuccess | ResponseError> = yield retry(3, 1000, fetchAPI.request, {
-      url: `manual-products`,
-      method: 'put',
-      data: {
-        badgeUrl: badge_id,
-        config,
-        slugs: slug.join(','),
-        ids: id.join(','),
-        productIDs: productIds.join(','),
-      },
-    });
-    const _dataError = res.data as ResponseError;
-    const _dataSuccess = res.data as ResponseSuccess;
-    if (_dataError.code) throw new Error(_dataError.message);
-    console.log('_dataSuccess', _dataSuccess);
+    const res: Awaited<ReturnType<typeof UpdateBadgesFlow>> = yield retry(3, 1000, UpdateBadgesFlow);
+    const _dataSuccess = res;
+
     postmessage.emit('@CUDBadge/updateBadgesSuccess', { data: _dataSuccess.data.items, message: _dataSuccess.message });
     yield put(updateBadge.success(payload));
   } catch (err) {

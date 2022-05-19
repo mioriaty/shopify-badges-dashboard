@@ -1,22 +1,36 @@
 import { put, retry, takeEvery } from '@redux-saga/core/effects';
-import { AxiosResponse } from 'axios';
-import fetchAPI from 'utils/functions/fetchAPI';
+import { pmAjax } from 'utils/initPostmesssage';
 import { postmessage } from 'utils/posrmessage';
 import { getActionType } from 'wiloke-react-core/utils';
 import { deleteAutomatic } from '../../actions/actionAutomaticProducts';
-import { Params, ResponseSuccess, ResponseError } from '../../DeleteBadgeAutomaticAPI';
+import { ResponseSuccess } from '../../DeleteBadgeAutomaticAPI';
+
+let DeleteAutomaticSuccess: (() => void) | undefined;
+let DeleteAutomaticFailure: (() => void) | undefined;
+
+const DeleteAutomatic = () => {
+  return new Promise<ResponseSuccess>((resolve, reject) => {
+    DeleteAutomaticSuccess?.();
+    DeleteAutomaticFailure?.();
+
+    DeleteAutomaticSuccess = pmAjax.on('deleteBadgeAutomatic/success', data => {
+      resolve(data);
+    });
+    DeleteAutomaticFailure = pmAjax.on('deleteBadgeAutomatic/failure', () => {
+      reject();
+    });
+  });
+};
 
 function* handleDeleteAutomatic({ payload }: ReturnType<typeof deleteAutomatic.request>) {
+  pmAjax.emit('deleteBadgeAutomatic/request', {
+    id: payload.id,
+    postType: payload.postType,
+  });
+
   try {
-    const res: AxiosResponse<ResponseSuccess | ResponseError> = yield retry(3, 1000, fetchAPI.request, {
-      url: `automatics/${payload.id}`,
-      method: 'delete',
-      data: { postType: payload.postType } as Params,
-    });
-    const _dataError = res.data as ResponseError;
-    const _dataSuccess = res.data as ResponseSuccess;
-    if (_dataError.code) throw new Error(_dataError.message);
-    console.log(_dataSuccess);
+    const res: Awaited<ReturnType<typeof DeleteAutomatic>> = yield retry(3, 1000, DeleteAutomatic);
+    const _dataSuccess = res;
     postmessage.emit('@CUDAutomatic/deleteAutomaticSuccess', {
       id: _dataSuccess.data.id,
       urlImage: _dataSuccess.data.urlImage,

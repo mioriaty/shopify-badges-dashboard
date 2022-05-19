@@ -1,5 +1,4 @@
 import { usePopupPurchaseCode } from 'containers/LoginPage';
-import { VerificationPage } from 'containers/LoginPage/VerificationPage';
 import { useTidioChat } from 'hooks/useTidioChat';
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -306,7 +305,7 @@ export const HomePage = () => {
   return (
     <View css={styles.container}>
       <IframePage />
-      <VerificationPage />
+      {/* <VerificationPage /> */}
     </View>
   );
 };

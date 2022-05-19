@@ -1,4 +1,5 @@
 import { applyMiddleware, combineReducers, compose, createStore, Middleware } from 'redux';
+import logger from 'redux-logger';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import createSagaMiddleware from 'redux-saga';
@@ -24,7 +25,7 @@ const reducers = persistReducer(persistConfig, _combineReducers);
 const middleWares: Middleware[] = [sagaMiddleware];
 
 if (isBrowser && isDev) {
-  // middleWares.push(logger);
+  middleWares.push(logger);
 }
 const store = createStore(reducers, undefined, composeEnhancers(applyMiddleware(...middleWares)));
 sagaMiddleware.run(rootSagas);

@@ -1,22 +1,36 @@
 import { put, retry, takeEvery } from '@redux-saga/core/effects';
-import { AxiosResponse } from 'axios';
-import fetchAPI from 'utils/functions/fetchAPI';
+import { pmAjax } from 'utils/initPostmesssage';
 import { postmessage } from 'utils/posrmessage';
 import { getActionType } from 'wiloke-react-core/utils';
 import { deleteBadge } from '../../actions/actionCUDBadge';
-import { ResponseError, ResponseSuccess } from '../../DeleteBadgeAPI';
+import { ResponseSuccess } from '../../DeleteBadgeAPI';
+
+let DeleteBadgesSuccess: (() => void) | undefined;
+let DeleteBadgesFailure: (() => void) | undefined;
+
+const DeleteBadgesFlow = () => {
+  return new Promise<ResponseSuccess>((resolve, reject) => {
+    DeleteBadgesSuccess?.();
+    DeleteBadgesFailure?.();
+
+    DeleteBadgesSuccess = pmAjax.on('deleteManualBadges/success', data => {
+      resolve(data);
+    });
+
+    DeleteBadgesFailure = pmAjax.on('deleteManualBadges/failure', () => {
+      reject();
+    });
+  });
+};
 
 function* handleDeleteBadge({ payload }: ReturnType<typeof deleteBadge.request>) {
   const { ids } = payload;
+  pmAjax.emit('deleteManualBadges/request', { ids: ids.join(',') });
+
   try {
-    const res: AxiosResponse<ResponseSuccess | ResponseError> = yield retry(3, 1000, fetchAPI.request, {
-      url: `manual-products`,
-      method: 'DELETE',
-      data: { ids: ids.join(',') },
-    });
-    const _dataError = res.data as ResponseError;
-    const _dataSuccess = res.data as ResponseSuccess;
-    if (_dataError.code) throw new Error(_dataError.message);
+    const res: Awaited<ReturnType<typeof DeleteBadgesFlow>> = yield retry(3, 1000, DeleteBadgesFlow);
+    const _dataSuccess = res;
+
     console.log('_dataSuccess', _dataSuccess);
     postmessage.emit('@CUDBadge/deleteBadgesSuccess', { id: _dataSuccess.data.id, message: _dataSuccess.message });
     yield put(deleteBadge.success(payload));

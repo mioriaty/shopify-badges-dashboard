@@ -1,27 +1,36 @@
 import { put, retry, takeEvery } from '@redux-saga/core/effects';
-import { AxiosResponse } from 'axios';
-import fetchAPI from 'utils/functions/fetchAPI';
+import { pmAjax } from 'utils/initPostmesssage';
 import { postmessage } from 'utils/posrmessage';
 import { getActionType } from 'wiloke-react-core/utils';
 import { createBadge } from '../../actions/actionCUDBadge';
-import { ResponseError, ResponseSuccess } from '../../CreateBadgeAPI';
+import { ResponseSuccess } from '../../CreateBadgeAPI';
+
+let CreateBadgesSuccess: (() => void) | undefined;
+let CreateBadgesFailure: (() => void) | undefined;
+
+const CreateBadgesFlow = () => {
+  return new Promise<ResponseSuccess>((resolve, reject) => {
+    CreateBadgesSuccess?.();
+    CreateBadgesFailure?.();
+
+    CreateBadgesSuccess = pmAjax.on('createManualBadges/success', data => {
+      resolve(data);
+    });
+
+    CreateBadgesFailure = pmAjax.on('createManualBadges/failure', () => {
+      reject();
+    });
+  });
+};
 
 function* handleCreateBadge({ payload }: ReturnType<typeof createBadge.request>) {
   const { badge_id, config, slug, productIds } = payload;
+  pmAjax.emit('createManualBadges/request', { badgeUrl: badge_id, config, slugs: slug.join(','), productIDs: productIds.join(',') });
+
   try {
-    const res: AxiosResponse<ResponseSuccess | ResponseError> = yield retry(3, 1000, fetchAPI.request, {
-      url: 'manual-products',
-      method: 'post',
-      data: {
-        badgeUrl: badge_id,
-        config,
-        slugs: slug.join(','),
-        productIDs: productIds.join(','),
-      },
-    });
-    const _dataError = res.data as ResponseError;
-    const _dataSuccess = res.data as ResponseSuccess;
-    if (_dataError.code) throw new Error(_dataError.message);
+    const res: Awaited<ReturnType<typeof CreateBadgesFlow>> = yield retry(3, 1000, CreateBadgesFlow);
+    const _dataSuccess = res;
+
     postmessage.emit('@CUDBadge/createBadgesSuccess', { data: _dataSuccess.data.items, message: _dataSuccess.message });
     yield put(createBadge.success(payload));
   } catch (err) {

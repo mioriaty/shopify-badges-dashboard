@@ -1,31 +1,44 @@
-import { AxiosResponse } from 'axios';
 import { Task } from 'redux-saga';
-import { fork, take, select, put, retry } from 'redux-saga/effects';
-import fetchAPI from 'utils/functions/fetchAPI';
+import { fork, put, retry, select, take } from 'redux-saga/effects';
+import { pmAjax } from 'utils/initPostmesssage';
 import { postmessage } from 'utils/posrmessage';
 import { getActionType } from 'wiloke-react-core/utils';
 import { loadmoreFullProducts } from '../../actions/actionFullProducts';
-import { Params, ResponseError, ResponseSuccess } from '../../ProductAPI';
+import { ResponseSuccess } from '../../ProductAPI';
 import { transformNewProduct } from './utils';
 
 let task: Task | undefined;
 
-function* handleLoadmoreFullProducts(_: ReturnType<typeof loadmoreFullProducts.request>) {
-  try {
-    const { activeKey, data }: AppState['fullProducts'] = yield select((state: AppState) => state.fullProducts);
-    const { currentPage } = data[activeKey] as Exclude<AppState['fullProducts']['data'][string], undefined>;
+let GetProductsSuccess: (() => void) | undefined;
+let GetProductsFailure: (() => void) | undefined;
 
-    const res: AxiosResponse<ResponseSuccess | ResponseError> = yield retry(3, 2000, fetchAPI.request, {
-      url: 'full-products',
-      params: {
-        s: activeKey ? activeKey : undefined,
-        page: currentPage + 1,
-      } as Params,
+const GetProductsFlow = () => {
+  return new Promise<ResponseSuccess>((resolve, reject) => {
+    GetProductsSuccess?.();
+    GetProductsFailure?.();
+
+    GetProductsSuccess = pmAjax.on('loadMoreFullProducts/success', data => {
+      resolve(data);
     });
-    const _dataError = res.data as ResponseError;
-    const _dataSuccess = res.data as ResponseSuccess;
-    if (_dataError.code) throw new Error(_dataError.message);
 
+    GetProductsFailure = pmAjax.on('loadMoreFullProducts/failure', () => {
+      reject();
+    });
+  });
+};
+
+function* handleLoadmoreFullProducts(_: ReturnType<typeof loadmoreFullProducts.request>) {
+  const { activeKey, data }: AppState['fullProducts'] = yield select((state: AppState) => state.fullProducts);
+  const { currentPage } = data[activeKey] as Exclude<AppState['fullProducts']['data'][string], undefined>;
+
+  pmAjax.emit('loadMoreFullProducts/request', {
+    s: activeKey ? activeKey : undefined,
+    page: currentPage + 1,
+  });
+
+  try {
+    const res: Awaited<ReturnType<typeof GetProductsFlow>> = yield retry(3, 2000, GetProductsFlow);
+    const _dataSuccess = res;
     const transformedData = transformNewProduct(_dataSuccess.data.items);
     postmessage.emit('@ProductPage/fullProductLoadMoreSuccess', {
       fullProducts: {
